@@ -36,3 +36,44 @@ window.addEventListener('drop', (e) => {
     e.preventDefault()
     dropHandler(e)
 })
+
+const urlParams = new URLSearchParams(window.location.search)
+const state = urlParams.get('state')
+
+const isSpotifyAuthCallback = state !== null
+
+if (isSpotifyAuthCallback) {
+    console.log(isSpotifyAuthCallback)
+    
+    const error = urlParams.get('error')
+    
+    if (error !== null) {
+        console.log(error)
+        console.log(JSON.stringify(error))
+
+        urlParams.delete('error')
+        throw error
+    }
+    
+    const accessToken = urlParams.get('access_token')
+    const tokenType = urlParams.get('token_type')
+    const expiresIn = urlParams.get('expires_in')
+
+    console.log(accessToken, tokenType, expiresIn)
+
+    urlParams.delete('access_token')
+    urlParams.delete('token_type')
+    urlParams.delete('state')
+
+    window.history.replaceState(null, null, `${window.location.pathname}?${urlParams.toString()}`)
+} else {
+    const spotifyAuthParams = new URLSearchParams({
+        'client_id': 'd48e33355f30490aa2a952bbf70055ad',
+        'redirect_uri': 'https://mikecoram.github.io/buy-music',
+        'response_type': 'token',
+        'state': Math.random().toString()
+    });
+
+    const spotifyAuthURL = `https://accounts.spotify.com/authorize?${spotifyAuthParams.toString()}`
+    document.getElementById('login-with-spotify').setAttribute('href', spotifyAuthURL)
+}
