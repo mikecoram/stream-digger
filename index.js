@@ -37,14 +37,13 @@ window.addEventListener('drop', (e) => {
     dropHandler(e)
 })
 
-const urlParams = new URLSearchParams(window.location.search)
+const urlParams = new URLSearchParams(window.location.split('#')[1])
 const state = urlParams.get('state')
 
 const isSpotifyAuthCallback = state !== null
+console.log(isSpotifyAuthCallback)
 
 if (isSpotifyAuthCallback) {
-    console.log(isSpotifyAuthCallback)
-    
     const error = urlParams.get('error')
     
     if (error !== null) {
@@ -60,16 +59,10 @@ if (isSpotifyAuthCallback) {
     const expiresIn = urlParams.get('expires_in')
 
     console.log(accessToken, tokenType, expiresIn)
-
-    urlParams.delete('access_token')
-    urlParams.delete('token_type')
-    urlParams.delete('state')
-
-    window.history.replaceState(null, null, `${window.location.pathname}?${urlParams.toString()}`)
 } else {
     const spotifyAuthParams = new URLSearchParams({
         'client_id': 'd48e33355f30490aa2a952bbf70055ad',
-        'redirect_uri': 'https://mikecoram.github.io/buy-music',
+        'redirect_uri': 'https://mikecoram.github.io/buy-music/',
         'response_type': 'token',
         'state': Math.random().toString()
     });
