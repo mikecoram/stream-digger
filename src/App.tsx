@@ -4,9 +4,9 @@ import { getImplicitGrantURI } from './lib/spotify-auth'
 import './App.css'
 import { DroppedSpotifyItem } from './lib/models/spotify-drop'
 
-class App extends React.Component<{spotifySession: SpotifySession | null, droppedItems?: DroppedSpotifyItem[]}> {
+class App extends React.Component<{spotifySession: SpotifySession | null, items: DroppedSpotifyItem[]}> {
   render (): JSX.Element {
-    const { spotifySession, droppedItems } = this.props
+    const { spotifySession, items } = this.props
 
     if (spotifySession === null || spotifySession.isExpired) {
       return (
@@ -19,15 +19,9 @@ class App extends React.Component<{spotifySession: SpotifySession | null, droppe
       )
     }
 
-    if (droppedItems === undefined || droppedItems === null) {
-      return (
-        <div>You're logged in</div>
-      )
-    }
-
     return (
       <>
-        {droppedItems.map(o => <div key={o.id}>{o.id}</div>)}
+        {items.map(o => <div key={o.id}>{o.id}</div>)}
       </>
     )
   }
