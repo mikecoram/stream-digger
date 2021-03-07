@@ -1,13 +1,12 @@
-export type SpotifySession = {
-  accessToken: string
+export interface SpotifySession {
+  accessToken: string | null
   expiryTime: string
-  expiresIn: number
-  state: string
-  tokenType: string 
+  state: string | null
+  tokenType: string | null
   isExpired: boolean
 }
 
-export type SpotifyAuthSetResult = {
-  success: boolean,
+export interface SpotifyAuthSetResult {
+  success: boolean
   error?: string
 }

@@ -1,36 +1,36 @@
+import React from 'react'
+import { SpotifySession } from './lib/models/spotify-session'
+import { getImplicitGrantURI } from './lib/spotify-auth'
 import './App.css'
-import { SpotifySession } from './lib/models/spotify-session';
+import { DroppedSpotifyItem } from './lib/models/spotify-drop'
 
-const spotifyAuthParams = new URLSearchParams({
-  'client_id': 'd48e33355f30490aa2a952bbf70055ad',
-  'redirect_uri': 'https://mikecoram.github.io/buy-music',
-  'response_type': 'token',
-  'state': Math.random().toString()
-})
+class App extends React.Component<{spotifySession: SpotifySession | null, droppedItems?: DroppedSpotifyItem[]}> {
+  render (): JSX.Element {
+    const { spotifySession, droppedItems } = this.props
 
-function getSpotifyHref () : string {
-  return `https://accounts.spotify.com/authorize?${spotifyAuthParams.toString()}`
-}
+    if (spotifySession === null || spotifySession.isExpired) {
+      return (
+        <a
+          id='login-with-spotify'
+          href={getImplicitGrantURI()}
+        >
+          Login with Spotify...
+        </a>
+      )
+    }
 
-type Props = {
-  spotifySession: SpotifySession | null
-}
+    if (droppedItems === undefined || droppedItems === null) {
+      return (
+        <div>You're logged in</div>
+      )
+    }
 
-function App ({ spotifySession }: Props) {
-  if (spotifySession === null || spotifySession.isExpired) {
     return (
-      <a
-      id="login-with-spotify"
-      href={getSpotifyHref()}
-      >
-        Login with Spotify...
-      </a>
+      <>
+        {droppedItems.map(o => <div key={o.id}>{o.id}</div>)}
+      </>
     )
   }
-
-  return (
-    <div>You are logged in with Spotify!</div>
-  )
 }
 
 export default App

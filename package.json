@@ -19,13 +19,18 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "standard": "npx ts-standard src --fix"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "ts-standard": {
+    "ignore": [
+      "src/react-app-env.d.ts",
+      "src/index.tsx"
     ]
   },
   "browserslist": {
@@ -39,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "ts-standard": "^10.0.0"
   }
 }
