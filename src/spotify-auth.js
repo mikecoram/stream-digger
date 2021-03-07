@@ -1,4 +1,4 @@
-const storeSpotifyAuthInLocalStorage = (hashFragment) => {
+export const storeSpotifyAuthInLocalStorage = (hashFragment) => {
     const params = new URLSearchParams(hashFragment)
     const callbackData = {}
 

@@ -1,3 +1,5 @@
+import { storeSpotifyAuthInLocalStorage } from './spotify-auth'
+
 const getSpotifyURIsFromDataTransferItem = (i) => new Promise((resolve, reject) => {
     try {
         i.getAsString(list => resolve(list.split('\n')))
