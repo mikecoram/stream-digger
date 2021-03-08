@@ -7,6 +7,8 @@ import { getItemsFromDropEvent } from './lib/spotify-drop-on-page'
 import { DroppedSpotifyItem } from './lib/models/spotify-drop'
 import { SpotifySession } from './lib/models/spotify-session'
 import { LocalStorageDroppedSpotifyItems } from './lib/local-storage-dropped-spotify-items';
+import SpotifyWebApi from 'spotify-web-api-js'
+import { resolveDroppedItems } from './lib/spotify-resolve-dropped-items';
 
 function render (
   items: DroppedSpotifyItem[],
@@ -41,6 +43,16 @@ window.addEventListener('dragover', (e) => e.preventDefault())
 
 window.addEventListener('drop', async (e) => {
   e.preventDefault()
-  storedItems.append(await getItemsFromDropEvent(e))
-  render(storedItems.get(), spotifySession)
+  const droppedItems = await getItemsFromDropEvent(e)
+  storedItems.append(droppedItems)
+  const items = droppedItems
+
+  if (!spotifySession?.accessToken) {
+    throw new Error('no spotify access token available')
+  }
+
+  const api = new SpotifyWebApi()
+  api.setAccessToken(spotifySession?.accessToken)
+  await resolveDroppedItems(api, items)
+  render(items, spotifySession)
 })

@@ -1,8 +1,8 @@
-import { DroppedSpotifyItem } from './models/spotify-drop';
+import { DroppedSpotifyItem } from './models/spotify-drop'
 const localStorageKey = 'spotifyItemReferences'
 
 export class LocalStorageDroppedSpotifyItems {
-  get() : DroppedSpotifyItem[] {
+  get (): DroppedSpotifyItem[] {
     const item = localStorage.getItem(localStorageKey)
 
     if (item === null) {
@@ -12,7 +12,7 @@ export class LocalStorageDroppedSpotifyItems {
     return JSON.parse(item) as DroppedSpotifyItem[]
   }
 
-  append(items: DroppedSpotifyItem[]) : void {
+  append (items: DroppedSpotifyItem[]): void {
     const storedAndNewItems = this.get().concat(items)
     const dedupedItems: DroppedSpotifyItem[] = []
 
