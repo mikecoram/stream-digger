@@ -1,8 +1,8 @@
 export interface SpotifySession {
-  accessToken: string | null
+  accessToken: string
   expiryTime: string
-  state: string | null
-  tokenType: string | null
+  state: string
+  tokenType: string
   isExpired: boolean
 }
 

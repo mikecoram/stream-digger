@@ -27,9 +27,9 @@ export class LocalStorageSpotifyAuth {
     }
 
     const callbackData: SpotifySession = {
-      accessToken: params.get('access_token'),
-      state: params.get('state'),
-      tokenType: params.get('token_type'),
+      accessToken: params.get('access_token') as string,
+      state: params.get('state') as string,
+      tokenType: params.get('token_type') as string,
       expiryTime: new Date(
         new Date().getTime() + (Number.parseInt(params.get('expires_in') as string, 0) * 1000)
       ).toString(),
