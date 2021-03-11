@@ -49,5 +49,15 @@ export const resolveDroppedItems = async (
     }
   }
 
-  return albums
+  const dedupedAlbums: SpotifyApi.AlbumObjectFull[] = []
+
+  for (const i of albums) {
+    if (dedupedAlbums.some(a => a.id === i.id)) {
+      continue
+    }
+
+    dedupedAlbums.push(i)
+  }
+
+  return dedupedAlbums
 }
