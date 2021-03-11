@@ -1,14 +1,17 @@
 import React from 'react'
-import { SpotifySession } from './lib/models/spotify-session'
 import { getImplicitGrantURI } from './lib/spotify-auth'
 import './App.css'
-import { DroppedSpotifyItem } from './lib/models/spotify-drop'
 
-class App extends React.Component<{spotifySession: SpotifySession | null, items: DroppedSpotifyItem[]}> {
+interface Props {
+  isLoggedIn: boolean
+  albums: SpotifyApi.AlbumObjectFull[]
+}
+
+class App extends React.Component<Props> {
   render (): JSX.Element {
-    const { spotifySession, items } = this.props
+    const { isLoggedIn, albums } = this.props
 
-    if (spotifySession === null || spotifySession.isExpired) {
+    if (!isLoggedIn) {
       return (
         <a
           id='login-with-spotify'
@@ -21,7 +24,19 @@ class App extends React.Component<{spotifySession: SpotifySession | null, items:
 
     return (
       <>
-        {items.map(o => <div key={o.id}>{o.id}</div>)}
+        {
+          albums.map(o => {
+            const source = 'bandcamp'
+            const track = `${o.artists.map(a => a.name).join(', ')} ${o.name}`
+            const q = `${source} ${track}`
+            const searchURI = encodeURI(`https://google.com/search?q=${q}`)
+            return (
+              <li key={o.id}>
+                <a href={searchURI} key={o.id}>{track}</a>
+              </li>
+            )
+          })
+        }
       </>
     )
   }

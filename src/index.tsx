@@ -4,21 +4,19 @@ import './index.css'
 import App from './App'
 import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
 import { getItemsFromDropEvent } from './lib/spotify-drop-on-page'
-import { DroppedSpotifyItem } from './lib/models/spotify-drop'
-import { SpotifySession } from './lib/models/spotify-session'
 import { LocalStorageDroppedSpotifyItems } from './lib/local-storage-dropped-spotify-items';
 import SpotifyWebApi from 'spotify-web-api-js'
 import { resolveDroppedItems } from './lib/spotify-resolve-dropped-items';
 
 function render (
-  items: DroppedSpotifyItem[],
-  spotifySession: SpotifySession|null
+  items: SpotifyApi.AlbumObjectFull[],
+  isLoggedIn: boolean
 ): void {
   ReactDOM.render(
     <React.StrictMode>
       <App
-      spotifySession={spotifySession}
-      items={items} 
+      isLoggedIn={isLoggedIn}
+      albums={items} 
       />
     </React.StrictMode>,
     document.getElementById('root')
@@ -27,32 +25,42 @@ function render (
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const spotifySession = spotifyAuth.getSession()
+const isLoggedIn = spotifySession !== null && !spotifySession?.isExpired
 const hashFragment = window.location.toString().split('#')[1]
 const isSpotifyAuthCallback = hashFragment !== undefined
-
 const storedItems = new LocalStorageDroppedSpotifyItems()
 
-if (isSpotifyAuthCallback) {
-  spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
-  window.location.replace(`${window.location.pathname}`)
-} else {
-  render(storedItems.get(), spotifySession)
-}
+const api = new SpotifyWebApi()
+api.setAccessToken(spotifySession?.accessToken as string)
 
 window.addEventListener('dragover', (e) => e.preventDefault())
 
 window.addEventListener('drop', async (e) => {
   e.preventDefault()
-  const droppedItems = await getItemsFromDropEvent(e)
-  storedItems.append(droppedItems)
-  const items = droppedItems
 
   if (!spotifySession?.accessToken) {
     throw new Error('no spotify access token available')
   }
 
-  const api = new SpotifyWebApi()
-  api.setAccessToken(spotifySession?.accessToken)
-  await resolveDroppedItems(api, items)
-  render(items, spotifySession)
+  storedItems.append(await getItemsFromDropEvent(e))
+
+  render(
+    await resolveDroppedItems(api, storedItems.get()),
+    isLoggedIn
+  )
 })
+
+;(async () => {
+  if (isSpotifyAuthCallback) {
+    spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
+    window.location.replace(`${window.location.pathname}`)
+  }
+
+  let items: SpotifyApi.AlbumObjectFull[] = []
+  
+  if (isLoggedIn) {
+    items = await resolveDroppedItems(api, storedItems.get())
+  }
+
+  render(items, isLoggedIn)
+})()
