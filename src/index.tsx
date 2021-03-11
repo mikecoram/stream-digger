@@ -26,10 +26,7 @@ function render (
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const spotifySession = spotifyAuth.getSession()
 const isLoggedIn = spotifySession !== null && !spotifySession?.isExpired
-const hashFragment = window.location.toString().split('#')[1]
-const isSpotifyAuthCallback = hashFragment !== undefined
 const storedItems = new LocalStorageDroppedSpotifyItems()
-
 const api = new SpotifyWebApi()
 api.setAccessToken(spotifySession?.accessToken as string)
 
@@ -37,20 +34,16 @@ window.addEventListener('dragover', (e) => e.preventDefault())
 
 window.addEventListener('drop', async (e) => {
   e.preventDefault()
-
-  if (!spotifySession?.accessToken) {
-    throw new Error('no spotify access token available')
-  }
-
   storedItems.append(await getItemsFromDropEvent(e))
-
-  render(
-    await resolveDroppedItems(api, storedItems.get()),
-    isLoggedIn
-  )
+  const items = await resolveDroppedItems(api, storedItems.get())
+  render(items, isLoggedIn)
 })
 
+// page load
 ;(async () => {
+  const hashFragment = window.location.toString().split('#')[1]
+  const isSpotifyAuthCallback = hashFragment !== undefined
+
   if (isSpotifyAuthCallback) {
     spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
     window.location.replace(`${window.location.pathname}`)
