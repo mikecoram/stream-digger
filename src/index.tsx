@@ -34,6 +34,11 @@ window.addEventListener('dragover', (e) => e.preventDefault())
 
 window.addEventListener('drop', async (e) => {
   e.preventDefault()
+
+  if (!isLoggedIn) {
+    return
+  }
+
   storedItems.append(await getItemsFromDropEvent(e))
   const items = await resolveDroppedItems(api, storedItems.get())
   render(items, isLoggedIn)
