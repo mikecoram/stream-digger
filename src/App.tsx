@@ -1,26 +1,13 @@
 import React from 'react'
-import { getImplicitGrantURI } from './lib/spotify-auth'
 import './App.css'
 
 interface Props {
-  isLoggedIn: boolean
   albums: SpotifyApi.AlbumObjectFull[]
 }
 
 class App extends React.Component<Props> {
   render (): JSX.Element {
-    const { isLoggedIn, albums } = this.props
-
-    if (!isLoggedIn) {
-      return (
-        <a
-          id='login-with-spotify'
-          href={getImplicitGrantURI()}
-        >
-          Login with Spotify...
-        </a>
-      )
-    }
+    const { albums } = this.props
 
     return (
       <>
