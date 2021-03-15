@@ -37,20 +37,15 @@ const pageLoad = async (): Promise<void> => {
     return
   }
 
-  let albums: SpotifyApi.AlbumObjectFull[] = []
   const spotifySession = spotifyAuth.getSession()
 
-  if (spotifySession?.accessToken) {
-    albums = await getAlbums(spotifySession.accessToken)
-  }
-
-  const isLoggedIn = spotifySession !== null && !spotifySession?.isExpired
-
-  if (!isLoggedIn) {
+  if (spotifySession === null || spotifySession.isExpired) {
     render(<Login />)
-  } else {
-    render(<App albums={albums} />)
+    return
   }
+ 
+  const albums = await getAlbums(spotifySession.accessToken)
+  render(<App albums={albums} />)
 }
 
 const renderWithDroppedItems = async (e: DragEvent, accessToken: string): Promise<void> => {
