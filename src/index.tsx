@@ -7,7 +7,8 @@ import { Login } from './Login'
 import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
 import { getItemsFromDropEvent } from './lib/spotify-drop-on-page'
 import { LocalStorageDroppedSpotifyItems } from './lib/local-storage-dropped-spotify-items'
-import { resolveDroppedItems } from './lib/spotify-resolve-dropped-items'
+import { droppedItemsToAlbums } from './lib/spotify-resolve-dropped-items'
+import { SpotifyResolver } from './lib/spotify-resolver';
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
@@ -24,7 +25,8 @@ const render = (
 const getAlbums = async (accessToken: string): Promise<SpotifyApi.AlbumObjectFull[]> => {
   const api = new SpotifyWebApi()
   api.setAccessToken(accessToken)
-  return await resolveDroppedItems(api, storedItems.get())
+  const spotify = new SpotifyResolver(api)
+  return await droppedItemsToAlbums(spotify, storedItems.get())
 }
 
 const pageLoad = async (): Promise<void> => {
