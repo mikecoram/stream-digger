@@ -1,5 +1,5 @@
 import React from 'react'
-import { getImplicitGrantURI } from './lib/spotify-auth'
+import { getImplicitGrantURI } from '../lib/spotify-auth'
 import './Login.css'
 
 export class Login extends React.Component {

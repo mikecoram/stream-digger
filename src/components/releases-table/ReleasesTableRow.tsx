@@ -1,6 +1,6 @@
 import React from 'react'
 import './ReleasesTable.css'
-import { Merchant } from '../lib/models/merchant'
+import { Merchant } from '../../lib/models/merchant'
 
 interface Props {
   album: SpotifyApi.AlbumObjectFull

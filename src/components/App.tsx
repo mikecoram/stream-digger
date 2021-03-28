@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import ReleasesTable from './releases-table/ReleasesTable'
-import { merchants } from './lib/merchants'
+import { merchants } from '../lib/merchants'
 import ClearAllBtn from './ClearAllBtn'
 import DragPrompt from './DragPrompt'
 import LogoutBtn from './LogoutBtn'

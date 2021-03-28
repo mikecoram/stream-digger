@@ -2,14 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import SpotifyWebApi from 'spotify-web-api-js'
 import './index.css'
-import App from './App'
-import { Login } from './Login'
+import App from './components/App'
+import { Login } from './components/Login'
 import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
 import { getItemsFromDropEvent } from './lib/spotify-drop-on-page'
 import { LocalStorageDroppedSpotifyItems } from './lib/local-storage-dropped-spotify-items'
 import { droppedItemsToAlbums } from './lib/spotify-resolve-dropped-items'
 import { SpotifyResolver } from './lib/spotify-resolver';
-import DragoverPrompt from './DragoverPrompt'
+import DragoverPrompt from './components/DragoverPrompt'
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
