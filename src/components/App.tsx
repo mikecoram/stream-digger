@@ -28,7 +28,9 @@ class App extends React.Component<Props> {
     )
 
     const content = (
-      albums.length === 0 ? <DragPrompt /> : <ReleasesTable albums={albums} merchants={merchants} />
+      albums.length === 0 ? 
+        <DragPrompt />
+        : <ReleasesTable albums={albums} merchants={merchants} />
     )
 
     return (
