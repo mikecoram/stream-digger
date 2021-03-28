@@ -1,10 +1,10 @@
 import { SpotifySession, SpotifyAuthSetResult } from './models/spotify-session'
 
-const localStorageKey = 'spotifySession'
+const key = 'spotifySession'
 
 export class LocalStorageSpotifyAuth {
   getSession (): SpotifySession | null {
-    const item = localStorage.getItem(localStorageKey)
+    const item = localStorage.getItem(key)
 
     if (item === null) {
       return null
@@ -20,7 +20,7 @@ export class LocalStorageSpotifyAuth {
     const error = params.get('error')
 
     if (error !== null) {
-      localStorage.removeItem(localStorageKey)
+      localStorage.removeItem(key)
       return { success: false, error }
     }
 
@@ -38,8 +38,12 @@ export class LocalStorageSpotifyAuth {
       params.delete(p)
     }
 
-    localStorage.setItem(localStorageKey, JSON.stringify(callbackData))
+    localStorage.setItem(key, JSON.stringify(callbackData))
 
     return { success: true }
+  }
+
+  clearSession (): void {
+    localStorage.removeItem(key)
   }
 }

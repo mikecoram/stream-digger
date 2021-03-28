@@ -1,9 +1,10 @@
 import { DroppedSpotifyItem } from './models/spotify-drop'
-const localStorageKey = 'spotifyItemReferences'
+
+const key = 'spotifyItemReferences'
 
 export class LocalStorageDroppedSpotifyItems {
   get (): DroppedSpotifyItem[] {
-    const item = localStorage.getItem(localStorageKey)
+    const item = localStorage.getItem(key)
 
     if (item === null) {
       return []
@@ -24,6 +25,10 @@ export class LocalStorageDroppedSpotifyItems {
       dedupedItems.push(i)
     }
 
-    localStorage.setItem(localStorageKey, JSON.stringify(dedupedItems))
+    localStorage.setItem(key, JSON.stringify(dedupedItems))
+  }
+
+  clear (): void {
+    localStorage.removeItem(key)
   }
 }

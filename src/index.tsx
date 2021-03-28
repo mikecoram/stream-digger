@@ -29,6 +29,20 @@ const getAlbums = async (accessToken: string): Promise<SpotifyApi.AlbumObjectFul
   return await droppedItemsToAlbums(spotify, storedItems.get())
 }
 
+const logout = (): void => {
+  if (window.confirm('Are you sure you want to logout?')) {
+    spotifyAuth.clearSession()
+    render(<Login />)
+  }
+}
+
+const clear = (): void => {
+  if (window.confirm('Are you sure you want to clear all items?')) {
+    storedItems.clear()
+    render(<App albums={[]} onClearItems={clear} onLogout={logout} />)
+  }
+}
+
 const pageLoad = async (): Promise<void> => {
   const hashFragment = window.location.toString().split('#')[1]
   const isSpotifyAuthCallback = hashFragment !== undefined
@@ -45,13 +59,13 @@ const pageLoad = async (): Promise<void> => {
   }
  
   const albums = await getAlbums(spotifySession.accessToken)
-  render(<App albums={albums} />)
+  render(<App albums={albums} onClearItems={clear} onLogout={logout} />)
 }
 
 const renderWithDroppedItems = async (e: DragEvent, accessToken: string): Promise<void> => {
   storedItems.append(await getItemsFromDropEvent(e))
   const albums = await getAlbums(accessToken)
-  render(<App albums={albums} />)
+  render(<App albums={albums} onClearItems={clear} onLogout={logout} />)
 }
 
 window.addEventListener('drop', (e) => {
