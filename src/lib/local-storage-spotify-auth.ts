@@ -20,8 +20,6 @@ export class LocalStorageSpotifyAuth {
     const error = params.get('error')
 
     if (error !== null) {
-      console.log(error)
-      console.log(JSON.stringify(error))
       localStorage.removeItem(localStorageKey)
       return { success: false, error }
     }
