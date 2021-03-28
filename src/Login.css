@@ -1,0 +1,14 @@
+.loginWithSpotify {
+  background-color: #1db954;
+  border-radius: 500px;
+  color:#fff;
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 20%;
+  margin: auto;
+  padding: 16px 48px 18px 48px;
+  text-align: center;
+  text-decoration: none;
+  width: 10rem;
+}
