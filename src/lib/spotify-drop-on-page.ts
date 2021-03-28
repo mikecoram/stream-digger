@@ -29,6 +29,13 @@ export async function getItemsFromDropEvent (e: DragEvent): Promise<DroppedSpoti
   const spotifyObjects = spotifyURIs
     .filter((u: string) => u.includes('https://open.spotify.com'))
     .map((u: string) => {
+      if (u.includes('playlist')) {
+        return {
+          id: u.split('playlist/')[1],
+          type: 'playlist' as DroppedSpotifyItemType
+        }
+      }
+
       const [type, id] = u.split('https://open.spotify.com/')[1].split('/')
 
       return {
