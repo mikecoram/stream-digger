@@ -9,6 +9,7 @@ import { getItemsFromDropEvent } from './lib/spotify-drop-on-page'
 import { LocalStorageDroppedSpotifyItems } from './lib/local-storage-dropped-spotify-items'
 import { droppedItemsToAlbums } from './lib/spotify-resolve-dropped-items'
 import { SpotifyResolver } from './lib/spotify-resolver';
+import DragoverPrompt from './DragoverPrompt'
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
@@ -77,6 +78,19 @@ window.addEventListener('drop', (e) => {
   }
 })
 
-window.addEventListener('dragover', (e) => e.preventDefault())
+window.addEventListener('dragover', (e) => {
+  e.preventDefault()
+  render(<DragoverPrompt />)
+})
+
+window.addEventListener('dragenter', (e) => {
+  e.preventDefault()
+  render(<DragoverPrompt />)
+})
+
+window.addEventListener('dragleave', (e) => {
+  e.preventDefault()
+  void pageLoad()
+})
 
 void pageLoad()

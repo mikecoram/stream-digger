@@ -1,10 +1,11 @@
 import React from 'react'
+import './DragPrompt.css'
 
 class DragPrompt extends React.Component<{}> {
   render (): JSX.Element {
     return (
-      <div>
-        Drag a playlist, track, album or artist from spotify to start...
+      <div className="dragPrompt">
+        Drag a playlist, track, album or artist from Spotify to start...
       </div>
     )
   }
