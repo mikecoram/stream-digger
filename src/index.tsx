@@ -33,15 +33,13 @@ const pageLoad = async (): Promise<void> => {
 
   if (isSpotifyAuthCallback) {
     spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
-    window.location.replace(`${window.location.pathname}`)
-    return
+    return window.location.replace(`${window.location.pathname}`)
   }
 
   const spotifySession = spotifyAuth.getSession()
 
   if (spotifySession === null || spotifySession.isExpired) {
-    render(<Login />)
-    return
+    return render(<Login />)
   }
  
   const albums = await getAlbums(spotifySession.accessToken)
