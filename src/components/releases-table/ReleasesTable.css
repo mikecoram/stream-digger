@@ -8,15 +8,16 @@
 }
 
 .releasesTable__headColumn {
-  padding-bottom:0.2em;
+  padding-bottom:0.6em;
 }
 
 .releasesTable__merchantLink {
-  margin-right: 0.6rem;
+  margin-right: 0.8rem;
 }
 
 .releasesTable__column {
   padding: 0.2em;
+  padding-bottom: 0.4em;
 }
 
 .releasesTable__boughtColumn {

@@ -5,6 +5,7 @@ import { merchants } from '../lib/merchants'
 import ClearAllBtn from './ClearAllBtn'
 import DragPrompt from './DragPrompt'
 import LogoutBtn from './LogoutBtn'
+import Header from './Header'
 
 interface Props {
   albums: SpotifyApi.AlbumObjectFull[]
@@ -35,8 +36,10 @@ class App extends React.Component<Props> {
 
     return (
       <div className='app'>
-        {buttons}
-        {content}
+        <Header buttons={buttons} />
+        <div className="content">
+          {content}
+        </div>
       </div>
     )
   }

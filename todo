@@ -1,4 +1,3 @@
-add app header
 refactor index.tsx
 better handling of drop events to avoid excess http requests
 save/load bought state
@@ -9,9 +8,11 @@ add gif to readme
 improve readme
 PKCE oauth method
 host somewhere
+digger logo
+rename to Spotify digger
 
 other spotify apps:
-song preview? for a buzzcocks type quiz
-how well do you know your own library, or a collaborative quiz - artist songs, popularity, year released etc with sockets and a backend
-simple app where drag and drop displays the bpm, key and spotify tagging info like tunebat
-upgraded mtTool
+  song preview? for a buzzcocks type quiz
+  how well do you know your own library, or a collaborative quiz - artist songs, popularity, year released etc with sockets and a backend
+  simple app where drag and drop displays the bpm, key and spotify tagging info like tunebat
+  upgraded mtTool

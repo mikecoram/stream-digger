@@ -80,17 +80,28 @@ window.addEventListener('drop', (e) => {
 
 window.addEventListener('dragover', (e) => {
   e.preventDefault()
-  render(<DragoverPrompt />)
+  const spotifySession = spotifyAuth.getSession()
+
+  if (spotifySession?.accessToken) {
+    render(<DragoverPrompt />)
+  }
 })
 
 window.addEventListener('dragenter', (e) => {
   e.preventDefault()
-  render(<DragoverPrompt />)
-})
+  const spotifySession = spotifyAuth.getSession()
+
+  if (spotifySession?.accessToken) {
+    render(<DragoverPrompt />)
+  }})
 
 window.addEventListener('dragleave', (e) => {
   e.preventDefault()
-  void pageLoad()
+  const spotifySession = spotifyAuth.getSession()
+
+  if (spotifySession?.accessToken) {
+    void pageLoad()
+  }
 })
 
 void pageLoad()

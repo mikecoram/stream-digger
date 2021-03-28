@@ -4,11 +4,10 @@
   height: 100%;
   left: 0;
   top: 0;
-  background: #f2f2f2;
 }
 
 .dragoverPrompt__text {
-  font-size: 2rem;
+  font-size: 1.4rem;
   text-align: center;
-  margin: 12rem auto;
+  margin: 15.6rem auto;
 }
