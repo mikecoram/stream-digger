@@ -1,4 +1,4 @@
-import { DroppedSpotifyItem } from './models/spotify-drop'
+import { DroppedSpotifyItem, DroppedSpotifyItemType } from './models/spotify-drop'
 async function getURIsFromDataTransferItem (i: DataTransferItem): Promise<string[]> {
   return await new Promise((resolve, reject) => {
     try {
@@ -30,8 +30,11 @@ export async function getItemsFromDropEvent (e: DragEvent): Promise<DroppedSpoti
     .filter((u: string) => u.includes('https://open.spotify.com'))
     .map((u: string) => {
       const [type, id] = u.split('https://open.spotify.com/')[1].split('/')
-      const item: DroppedSpotifyItem = { id, type }
-      return item
+
+      return {
+        id,
+        type: type as DroppedSpotifyItemType
+      }
     })
 
   return spotifyObjects
