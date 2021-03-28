@@ -25,13 +25,16 @@ class ReleasesTable extends React.Component<Props> {
         <thead className='releasesTable__head'>
           <tr>
             <td className='releasesTable__headColumn'>
-              Bought?
+              Bought
+            </td>
+            <td className='releasesTable__headColumn'>
+              Artists
             </td>
             <td className='releasesTable__headColumn'>
               Release
             </td>
             <td className='releasesTable__headColumn'>
-              Find on merchants
+              Buy from
             </td>
           </tr>
         </thead>
