@@ -1,3 +1,4 @@
+header while logged out
 refactor index.tsx
 better handling of drop events to avoid excess http requests
 save/load bought state
