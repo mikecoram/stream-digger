@@ -1,3 +1,8 @@
+.releasesTable {
+  display: block;
+  width: auto;
+}
+
 .releasesTable__head {
   font-weight: bold;
 }
@@ -23,6 +28,11 @@
   transform: scale(1.5);
 }
 
+.releasesTable__artistsColumn {
+  min-width: 15rem;
+}
+
 .releasesTable__albumColumn {
+  min-width: 20rem;
   padding-right: 0.8em;
 }

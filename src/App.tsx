@@ -17,14 +17,14 @@ class App extends React.Component<Props> {
     const { albums } = this.props
 
     const buttons = (
-      <>
+      <div className="buttonContainer">
         {
           albums.length > 0 ? 
             <ClearAllBtn onClearItems={this.props.onClearItems.bind(this)} /> 
             : null
         }
         <LogoutBtn onLogout={this.props.onLogout.bind(this)} />
-      </>
+      </div>
     )
 
     const content = (
