@@ -22,13 +22,6 @@ const render = (
   document.getElementById('root')
 )
 
-const getAlbums = async (accessToken: string): Promise<SpotifyApi.AlbumObjectFull[]> => {
-  const api = new SpotifyWebApi()
-  api.setAccessToken(accessToken)
-  const spotify = new SpotifyResolver(api)
-  return await droppedItemsToAlbums(spotify, storedItems.get())
-}
-
 const logout = (): void => {
   if (window.confirm('Are you sure you want to logout?')) {
     spotifyAuth.clearSession()
@@ -41,6 +34,13 @@ const clear = (): void => {
     storedItems.clear()
     render(<App albums={[]} onClearItems={clear} onLogout={logout} />)
   }
+}
+
+const getAlbums = async (accessToken: string): Promise<SpotifyApi.AlbumObjectFull[]> => {
+  const api = new SpotifyWebApi()
+  api.setAccessToken(accessToken)
+  const spotify = new SpotifyResolver(api)
+  return await droppedItemsToAlbums(spotify, storedItems.get())
 }
 
 const pageLoad = async (): Promise<void> => {
