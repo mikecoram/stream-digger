@@ -1,15 +1,11 @@
 import SpotifyWebApi from 'spotify-web-api-js'
 import { DroppedSpotifyItem } from './models/spotify-drop'
 
-export const resolveDroppedItems = async (
+async function resolveTrackIds (
   api: SpotifyWebApi.SpotifyWebApiJs,
-  items: DroppedSpotifyItem[]
-): Promise<SpotifyApi.AlbumObjectFull[]> => {
+  trackIds: string[]
+): Promise<SpotifyApi.AlbumObjectFull[]> {
   const albums: SpotifyApi.AlbumObjectFull[] = []
-  const trackIds = items.filter(i => i.type === 'track').map(i => i.id)
-  const playlistIds = items.filter(i => i.type === 'playlist').map(i => i.id)
-  const albumIds = items.filter(i => i.type === 'album').map(i => i.id)
-  const artistIds = items.filter(i => i.type === 'artist').map(i => i.id)
 
   if (trackIds.length > 0) {
     let i = 0; let trackIdsChunk
@@ -21,14 +17,34 @@ export const resolveDroppedItems = async (
     }
   }
 
-  for (const i of playlistIds) {
-    let offset = 0; let res
+  return albums
+}
 
-    while ((res = await api.getPlaylistTracks(i, { offset, limit: 50 })).next !== null) {
+async function resolvePlaylistIds (
+  api: SpotifyWebApi.SpotifyWebApiJs,
+  playlistIds: string[]
+): Promise<SpotifyApi.AlbumObjectFull[]> {
+  const albums: SpotifyApi.AlbumObjectFull[] = []
+
+  for (const i of playlistIds) {
+    let offset = 0
+    let res = await api.getPlaylistTracks(i, { offset, limit: 50 })
+    albums.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album as SpotifyApi.AlbumObjectFull))
+
+    while (res.next !== null) {
+      res = await api.getPlaylistTracks(i, { offset: offset += 50, limit: 50 })
       albums.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album as SpotifyApi.AlbumObjectFull))
-      offset += 50
     }
   }
+
+  return albums
+}
+
+async function resolveAlbumIds (
+  api: SpotifyWebApi.SpotifyWebApiJs,
+  albumIds: string[]
+): Promise<SpotifyApi.AlbumObjectFull[]> {
+  const albums: SpotifyApi.AlbumObjectFull[] = []
 
   if (albumIds.length > 0) {
     let i = 0; let albumIdsChunk
@@ -40,14 +56,45 @@ export const resolveDroppedItems = async (
     }
   }
 
-  for (const i of artistIds) {
-    let offset = 0; let res
+  return albums
+}
 
-    while ((res = await api.getArtistAlbums(i, { offset, limit: 50 })).next !== null) {
+async function resolveArtistIds (
+  api: SpotifyWebApi.SpotifyWebApiJs,
+  artistIds: string[]
+): Promise<SpotifyApi.AlbumObjectFull[]> {
+  const albums: SpotifyApi.AlbumObjectFull[] = []
+
+  for (const i of artistIds) {
+    let offset = 0
+    let res = await api.getArtistAlbums(i, { offset, limit: 50 })
+    albums.push(...(res.items as SpotifyApi.AlbumObjectFull[]))
+    offset += 50
+
+    while (res.next !== null) {
+      res = await api.getArtistAlbums(i, { offset: offset += 50, limit: 50 })
       albums.push(...(res.items as SpotifyApi.AlbumObjectFull[]))
-      offset += 50
     }
   }
+
+  return albums
+}
+
+export const resolveDroppedItems = async (
+  api: SpotifyWebApi.SpotifyWebApiJs,
+  items: DroppedSpotifyItem[]
+): Promise<SpotifyApi.AlbumObjectFull[]> => {
+  const trackIds = items.filter(i => i.type === 'track').map(i => i.id)
+  const playlistIds = items.filter(i => i.type === 'playlist').map(i => i.id)
+  const albumIds = items.filter(i => i.type === 'album').map(i => i.id)
+  const artistIds = items.filter(i => i.type === 'artist').map(i => i.id)
+
+  const albums: SpotifyApi.AlbumObjectFull[] = [
+    ...await resolveTrackIds(api, trackIds),
+    ...await resolvePlaylistIds(api, playlistIds),
+    ...await resolveAlbumIds(api, albumIds),
+    ...await resolveArtistIds(api, artistIds)
+  ]
 
   const dedupedAlbums: SpotifyApi.AlbumObjectFull[] = []
 
