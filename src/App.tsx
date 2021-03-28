@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import { merchants } from './lib/merchants'
 
 interface Props {
   albums: SpotifyApi.AlbumObjectFull[]
@@ -12,14 +13,24 @@ class App extends React.Component<Props> {
     return (
       <>
         {
-          albums.map(o => {
-            const source = 'bandcamp'
-            const track = `${o.artists.map(a => a.name).join(', ')} ${o.name}`
-            const q = `${source} ${track}`
-            const searchURI = encodeURI(`https://google.com/search?q=${q}`)
+          albums.map(a => {
+            const albumTerm = `${a.artists.map(a => a.name).join(', ')} ${a.name}`
+
             return (
-              <li key={o.id}>
-                <a href={searchURI} key={o.id}>{track}</a>
+              <li key={a.id}>
+                <input type='checkbox' />
+                {albumTerm}
+                <span> </span>
+                {
+                  merchants.map(m =>
+                    <React.Fragment key={`${a.id}-${m.id}`}>
+                      <a href={encodeURI(`https://google.com/search?q=${m.search} ${albumTerm}`)}>
+                        {m.text}
+                      </a>
+                      <span> </span>
+                    </React.Fragment>
+                  )
+                }
               </li>
             )
           })
