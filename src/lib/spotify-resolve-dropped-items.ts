@@ -5,7 +5,7 @@ export const resolveDroppedItems = async (
   api: SpotifyWebApi.SpotifyWebApiJs,
   items: DroppedSpotifyItem[]
 ): Promise<SpotifyApi.AlbumObjectFull[]> => {
-  let albums: SpotifyApi.AlbumObjectFull[] = []
+  const albums: SpotifyApi.AlbumObjectFull[] = []
   const trackIds = items.filter(i => i.type === 'track').map(i => i.id)
   const playlistIds = items.filter(i => i.type === 'playlist').map(i => i.id)
   const albumIds = items.filter(i => i.type === 'album').map(i => i.id)
@@ -16,7 +16,7 @@ export const resolveDroppedItems = async (
 
     while ((trackIdsChunk = trackIds.slice(i, i + 50)).length > 0) {
       const res = await api.getTracks(trackIdsChunk)
-      albums = albums.concat(res.tracks.map(i => i.album as SpotifyApi.AlbumObjectFull))
+      albums.push(...res.tracks.map(i => i.album as SpotifyApi.AlbumObjectFull))
       i += 50
     }
   }
@@ -25,7 +25,7 @@ export const resolveDroppedItems = async (
     let offset = 0; let res
 
     while ((res = await api.getPlaylistTracks(i, { offset, limit: 50 })).next !== null) {
-      albums = albums.concat(res.items.map(i => (i as any).track.album))
+      albums.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album as SpotifyApi.AlbumObjectFull))
       offset += 50
     }
   }
@@ -35,7 +35,7 @@ export const resolveDroppedItems = async (
 
     while ((albumIdsChunk = albumIds.slice(i, i + 20)).length > 0) {
       const res = await api.getAlbums(albumIdsChunk)
-      albums = albums.concat(res.albums)
+      albums.push(...res.albums)
       i += 20
     }
   }
@@ -44,7 +44,7 @@ export const resolveDroppedItems = async (
     let offset = 0; let res
 
     while ((res = await api.getArtistAlbums(i, { offset, limit: 50 })).next !== null) {
-      albums = albums.concat(res.items as any)
+      albums.push(...(res.items as SpotifyApi.AlbumObjectFull[]))
       offset += 50
     }
   }
