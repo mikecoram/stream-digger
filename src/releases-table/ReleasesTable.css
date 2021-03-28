@@ -1,0 +1,33 @@
+
+.releasesTable {
+  margin: auto;
+}
+
+.releasesTable__head {
+  font-weight: bold;
+}
+
+.releasesTable__headColumn {
+  padding-bottom:0.2em;
+}
+
+.releasesTable__merchantLink {
+  margin-right: 0.6rem;
+}
+
+.releasesTable__column {
+  padding: 0.2em;
+}
+
+.releasesTable__boughtColumn {
+  width: 4.6rem;
+  text-align: center;
+}
+
+.releasesTable__boughtCheckbox {
+  transform: scale(1.5);
+}
+
+.releasesTable__albumColumn {
+  padding-right: 0.8em;
+}
