@@ -3,11 +3,11 @@ import { SpotifySession, SpotifyAuthSetResult } from './models/spotify-session'
 const key = 'spotifySession'
 
 export class LocalStorageSpotifyAuth {
-  getSession (): SpotifySession | null {
+  getSession (): SpotifySession | undefined {
     const item = localStorage.getItem(key)
 
     if (item === null) {
-      return null
+      return undefined
     }
 
     const data = JSON.parse(item) as SpotifySession

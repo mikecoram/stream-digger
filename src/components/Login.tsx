@@ -7,7 +7,7 @@ export class Login extends React.Component {
     return (
       <a
         id='login-with-spotify'
-        className="loginWithSpotify"
+        className='loginWithSpotify'
         href={getImplicitGrantURI()}
       >
         Login with Spotify

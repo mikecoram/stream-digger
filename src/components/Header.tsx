@@ -13,7 +13,7 @@ class Header extends React.Component<Props> {
     return (
       <div className='header'>
         <div className='header__content'>
-          <img src={excavatorImage} className="header__logo" />
+          <img src={excavatorImage} className='header__logo' />
           <span className='header__title'>
             Spotify Digger
           </span>
