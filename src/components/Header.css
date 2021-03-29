@@ -13,4 +13,14 @@
   color: #fff;
   font-weight: 700;
   font-size: 1.2em;
+  display: block;
+  float: left;
+}
+
+.header__logo {
+  margin: auto;
+  margin-right: 0.6rem;
+  width: 1.6rem;
+  display: block;
+  float: left;
 }

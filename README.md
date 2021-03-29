@@ -1,3 +1,5 @@
-# Buy Music
+# Spotify Digger
 
-If you use Spotify to dig for new music but want to buy them for DJing purposes or just because you want ownership or like to support artists, this site can save you a lot of time.
+Drag and drop from Spotify to easily find places to purchase high-quaility audio files.
+
+Support the musicians and producers you love, and streamline your digging process.

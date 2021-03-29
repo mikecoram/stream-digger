@@ -6,6 +6,7 @@ import ClearAllBtn from './ClearAllBtn'
 import DragPrompt from './DragPrompt'
 import LogoutBtn from './LogoutBtn'
 import Header from './Header'
+import Footer from './Footer'
 
 interface Props {
   albums: SpotifyApi.AlbumObjectFull[]
@@ -40,6 +41,7 @@ class App extends React.Component<Props> {
         <div className="content">
           {content}
         </div>
+        <Footer /> 
       </div>
     )
   }
