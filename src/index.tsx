@@ -51,27 +51,15 @@ const render = async ({ isDragging = false } = {}) => {
 const logout = (): void => {
   if (window.confirm('Are you sure you want to logout?')) {
     spotifyAuth.clearSession()
-    pageLoad()
+    render()
   }
 }
 
 const clear = (): void => {
   if (window.confirm('Are you sure you want to clear all items?')) {
     storedItems.clear()
-    pageLoad()
+    render()
   }
-}
-
-const pageLoad = async (): Promise<void> => {
-  const hashFragment = window.location.toString().split('#')[1]
-  const isSpotifyAuthCallback = hashFragment !== undefined
-
-  if (isSpotifyAuthCallback) {
-    spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
-    return window.location.replace(`${window.location.pathname}`)
-  }
-
-  render()
 }
 
 const renderWithDroppedItems = async (e: DragEvent): Promise<void> => {
@@ -101,7 +89,19 @@ window.addEventListener('dragenter', (e) => {
 
 window.addEventListener('dragleave', (e) => {
   e.preventDefault()
-  void pageLoad()
+  render()
 })
+
+const pageLoad = async (): Promise<void> => {
+  const hashFragment = window.location.toString().split('#')[1]
+  const isSpotifyAuthCallback = hashFragment !== undefined
+
+  if (isSpotifyAuthCallback) {
+    spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
+    return window.location.replace(`${window.location.pathname}`)
+  }
+
+  render()
+}
 
 void pageLoad()
