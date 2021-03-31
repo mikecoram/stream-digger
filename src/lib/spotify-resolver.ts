@@ -1,4 +1,5 @@
 import SpotifyWebApi from 'spotify-web-api-js'
+import { Album } from './models/album';
 
 export class SpotifyResolver {
   api: SpotifyWebApi.SpotifyWebApiJs
@@ -9,7 +10,7 @@ export class SpotifyResolver {
 
   async tracksToAlbums (
     trackIds: string[]
-  ): Promise<SpotifyApi.AlbumObjectFull[]> {
+  ): Promise<Album[]> {
     const albumIds: string[] = []
 
     if (trackIds.length > 0) {
@@ -27,7 +28,7 @@ export class SpotifyResolver {
 
   async playlistsToAlbums (
     playlistIds: string[]
-  ): Promise<SpotifyApi.AlbumObjectFull[]> {
+  ): Promise<Album[]> {
     const albumIds: string[] = []
 
     for (const i of playlistIds) {
@@ -46,15 +47,15 @@ export class SpotifyResolver {
 
   async albumsToAlbums (
     albumIds: string[]
-  ): Promise<SpotifyApi.AlbumObjectFull[]> {
-    const albums: SpotifyApi.AlbumObjectFull[] = []
+  ): Promise<Album[]> {
+    const albums: Album[] = []
 
     if (albumIds.length > 0) {
       let i = 0; let albumIdsChunk
 
       while ((albumIdsChunk = albumIds.slice(i, i + 20)).length > 0) {
         const res = await this.api.getAlbums(albumIdsChunk)
-        albums.push(...res.albums)
+        albums.push(...res.albums as Album[])
         i += 20
       }
     }
@@ -64,7 +65,7 @@ export class SpotifyResolver {
 
   async artistsToAlbums (
     artistIds: string[]
-  ): Promise<SpotifyApi.AlbumObjectFull[]> {
+  ): Promise<Album[]> {
     const albumIds: string[] = []
 
     for (const i of artistIds) {

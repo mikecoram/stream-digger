@@ -9,9 +9,10 @@ import Header from './Header'
 import Footer from './Footer'
 import { Login } from './Login'
 import DragoverPrompt from './DragoverPrompt'
+import { Album } from '../lib/models/album'
 
 interface Props {
-  albums: SpotifyApi.AlbumObjectFull[]
+  albums: Album[]
   isLoggedIn: boolean
   isDragging: boolean
   onClearItems: () => void

@@ -1,8 +1,8 @@
+show dragoverprompt as an overlay
+display album artwork
 better handling of drop events to avoid excess http requests
 save/load bought state
-display album artwork
 nicer table styling
-show copyright holder (to indicate label)
 add gif to readme
 improve readme
 PKCE oauth method

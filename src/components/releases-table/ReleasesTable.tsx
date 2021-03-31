@@ -2,9 +2,10 @@ import React from 'react'
 import './ReleasesTable.css'
 import { Merchant } from '../../lib/models/merchant'
 import ReleasesTableRow from './ReleasesTableRow'
+import { Album } from '../../lib/models/album'
 
 interface Props {
-  albums: SpotifyApi.AlbumObjectFull[]
+  albums: Album[]
   merchants: Merchant[]
 }
 
@@ -32,6 +33,9 @@ class ReleasesTable extends React.Component<Props> {
             </td>
             <td className='releasesTable__headColumn'>
               Release
+            </td>
+            <td className='releasesTable__headColumn'>
+              Label
             </td>
             <td className='releasesTable__headColumn'>
               Buy from

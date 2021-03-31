@@ -1,10 +1,11 @@
+import { Album } from './models/album'
 import { DroppedSpotifyItem } from './models/spotify-drop'
 import { SpotifyResolver } from './spotify-resolver'
 
 function removeDuplicates (
-  albumsWithDuplicates: SpotifyApi.AlbumObjectFull[]
-): SpotifyApi.AlbumObjectFull[] {
-  const dedupedAlbums: SpotifyApi.AlbumObjectFull[] = []
+  albumsWithDuplicates: Album[]
+): Album[] {
+  const dedupedAlbums: Album[] = []
 
   for (const i of albumsWithDuplicates) {
     if (dedupedAlbums.some(a => a.id === i.id)) {
@@ -20,7 +21,7 @@ function removeDuplicates (
 export const droppedItemsToAlbums = async (
   spotify: SpotifyResolver,
   items: DroppedSpotifyItem[]
-): Promise<SpotifyApi.AlbumObjectFull[]> => {
+): Promise<Album[]> => {
   const trackIds = items.filter(i => i.type === 'track').map(i => i.id)
   const playlistIds = items.filter(i => i.type === 'playlist').map(i => i.id)
   const albumIds = items.filter(i => i.type === 'album').map(i => i.id)
