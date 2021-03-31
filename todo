@@ -1,5 +1,8 @@
 show dragoverprompt as an overlay
-display album artwork
+label as subheading of release?
+striped row styling
+pagination
+filtering
 better handling of drop events to avoid excess http requests
 save/load bought state
 nicer table styling

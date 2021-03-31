@@ -12,11 +12,12 @@ class ReleasesTableRow extends React.Component<Props> {
   render (): JSX.Element {
     const { album, merchants } = this.props
     const artists = album.artists.map(a => a.name).join(', ')
+    const smallImage = album.images.find(i => i.height === 64)
 
     return (
       <tr>
-        <td className='releasesTable__column releasesTable__boughtColumn'>
-          <input className='releasesTable__boughtCheckbox' type='checkbox' />
+        <td className='releasesTable__column'>
+          <img src={smallImage?.url} />
         </td>
         <td className='releasesTable__column releasesTable__artistsColumn'>
           {artists}
@@ -39,6 +40,9 @@ class ReleasesTableRow extends React.Component<Props> {
               </a>
             )
           }
+        </td>
+        <td className='releasesTable__column releasesTable__boughtColumn'>
+          <input className='releasesTable__boughtCheckbox' type='checkbox' />
         </td>
       </tr>
     )

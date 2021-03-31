@@ -11,6 +11,10 @@
   padding-bottom:0.6em;
 }
 
+.releasesTable__headColumn__artwork {
+  padding-right: 6em;
+}
+
 .releasesTable__merchantLink {
   margin-right: 0.8rem;
 }

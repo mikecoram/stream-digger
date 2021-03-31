@@ -25,9 +25,7 @@ class ReleasesTable extends React.Component<Props> {
       <table className='releasesTable'>
         <thead className='releasesTable__head'>
           <tr>
-            <td className='releasesTable__headColumn'>
-              Bought
-            </td>
+            <td className='releasesTable__headColumn releasesTable__headColumn__artwork'></td>
             <td className='releasesTable__headColumn'>
               Artists
             </td>
@@ -39,6 +37,9 @@ class ReleasesTable extends React.Component<Props> {
             </td>
             <td className='releasesTable__headColumn'>
               Buy from
+            </td>
+            <td className='releasesTable__headColumn'>
+              Bought
             </td>
           </tr>
         </thead>
