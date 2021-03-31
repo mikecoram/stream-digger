@@ -23,12 +23,22 @@ const getAlbums = async (
   return await droppedItemsToAlbums(spotify, items)
 }
 
-const render = ({ albums = [], isDragging = false }: any = {}) => {
+const render = async ({ isDragging = false } = {}) => {
+  const session = spotifyAuth.getSession()
+  let albums: SpotifyApi.AlbumObjectFull[] = []
+
+  if (session !== undefined) {
+    albums = await getAlbums(
+      session.accessToken,
+      storedItems.get()
+    )
+  }
+
   ReactDOM.render(
     <React.StrictMode>
       <App 
         albums={albums}
-        isLoggedIn={spotifyAuth.getSession() !== undefined}
+        isLoggedIn={session !== undefined}
         isDragging={isDragging}
         onClearItems={clear}
         onLogout={logout}
@@ -61,32 +71,18 @@ const pageLoad = async (): Promise<void> => {
     return window.location.replace(`${window.location.pathname}`)
   }
 
-  const session = spotifyAuth.getSession()
-
-  if (session === undefined) {
-    return render()
-  }
-
-  const albums = await getAlbums(session.accessToken, storedItems.get())
-
-  render({ albums })
+  render()
 }
 
 const renderWithDroppedItems = async (e: DragEvent): Promise<void> => {
   storedItems.append(await getItemsFromDropEvent(e))
-
-  const albums = await getAlbums(
-    spotifyAuth.getSession()!.accessToken,
-    storedItems.get()
-  )
-
-  render({ albums })
+  render()
 }
 
 window.addEventListener('drop', (e) => {
   e.preventDefault()
 
-  if (spotifyAuth.getSession() === undefined) {
+  if (spotifyAuth.getSession() === undefined || spotifyAuth.getSession()?.isExpired) {
     return
   }
 
