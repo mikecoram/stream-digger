@@ -10,38 +10,38 @@ export class SpotifyResolver {
   async tracksToAlbums (
     trackIds: string[]
   ): Promise<SpotifyApi.AlbumObjectFull[]> {
-    const albums: SpotifyApi.AlbumObjectFull[] = []
+    const albumIds: string[] = []
 
     if (trackIds.length > 0) {
       let i = 0; let trackIdsChunk
 
       while ((trackIdsChunk = trackIds.slice(i, i + 50)).length > 0) {
         const res = await this.api.getTracks(trackIdsChunk)
-        albums.push(...res.tracks.map(i => i.album as SpotifyApi.AlbumObjectFull))
+        albumIds.push(...res.tracks.map(i => i.album.id))
         i += 50
       }
     }
 
-    return albums
+    return await this.albumsToAlbums(albumIds)
   }
 
   async playlistsToAlbums (
     playlistIds: string[]
   ): Promise<SpotifyApi.AlbumObjectFull[]> {
-    const albums: SpotifyApi.AlbumObjectFull[] = []
+    const albumIds: string[] = []
 
     for (const i of playlistIds) {
       let offset = 0
       let res = await this.api.getPlaylistTracks(i, { offset, limit: 50 })
-      albums.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album as SpotifyApi.AlbumObjectFull))
+      albumIds.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album.id))
 
       while (res.next !== null) {
         res = await this.api.getPlaylistTracks(i, { offset: offset += 50, limit: 50 })
-        albums.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album as SpotifyApi.AlbumObjectFull))
+        albumIds.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album.id))
       }
     }
 
-    return albums
+    return await this.albumsToAlbums(albumIds)
   }
 
   async albumsToAlbums (
@@ -65,20 +65,20 @@ export class SpotifyResolver {
   async artistsToAlbums (
     artistIds: string[]
   ): Promise<SpotifyApi.AlbumObjectFull[]> {
-    const albums: SpotifyApi.AlbumObjectFull[] = []
+    const albumIds: string[] = []
 
     for (const i of artistIds) {
       let offset = 0
       let res = await this.api.getArtistAlbums(i, { offset, limit: 50 })
-      albums.push(...(res.items as SpotifyApi.AlbumObjectFull[]))
+      albumIds.push(...res.items.map(a => a.id))
       offset += 50
 
       while (res.next !== null) {
         res = await this.api.getArtistAlbums(i, { offset: offset += 50, limit: 50 })
-        albums.push(...(res.items as SpotifyApi.AlbumObjectFull[]))
+        albumIds.push(...res.items.map(a => a.id))
       }
     }
 
-    return albums
+    return await this.albumsToAlbums(albumIds)
   }
 }
