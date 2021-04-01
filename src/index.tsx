@@ -38,7 +38,7 @@ const render = async ({ isDragging = false } = {}) => {
 
   ReactDOM.render(
     <React.StrictMode>
-      <App 
+      <App
         albums={albums}
         isLoggedIn={isLoggedIn}
         isDragging={isDragging}

@@ -1,6 +1,6 @@
 on drag events - check is spotify event before doing anything
 show dragoverprompt as an overlay
-striped row styling / nicer table styling
+remove artist support
 pagination
 homepage with intro text and gif
 filtering

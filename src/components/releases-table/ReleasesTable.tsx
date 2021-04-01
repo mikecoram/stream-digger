@@ -22,7 +22,7 @@ class ReleasesTable extends React.Component<Props> {
     )
 
     return (
-      <table className='releasesTable'>
+      <table className='releasesTable' cellSpacing="0" cellPadding="0">
         <thead className='releasesTable__head'>
           <tr>
             <td className='releasesTable__headColumn releasesTable__headColumn__artwork' />
@@ -40,7 +40,7 @@ class ReleasesTable extends React.Component<Props> {
             </td>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="releasesTable__tbody">
           {rows}
         </tbody>
       </table>
