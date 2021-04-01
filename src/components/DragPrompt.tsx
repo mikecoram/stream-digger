@@ -5,7 +5,7 @@ class DragPrompt extends React.Component<{}> {
   render (): JSX.Element {
     return (
       <div className='dragPrompt'>
-        Drag tracks, playlists, albums or artists from Spotify to here to start...
+        Drag tracks, a playlist or an album from Spotify to here to start...
       </div>
     )
   }
