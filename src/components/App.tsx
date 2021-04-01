@@ -92,7 +92,7 @@ class App extends React.Component<{}, State> {
 
   handleWindowDragEnd (e: DragEvent): void {
     e.preventDefault()
-    this.setState({ isDragging: true })
+    this.setState({ isDragging: false })
   }
 
   handleOnClearItems (): void {
