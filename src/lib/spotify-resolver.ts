@@ -66,24 +66,4 @@ export class SpotifyResolver {
 
     return albums
   }
-
-  async artistsToAlbums (
-    artistIds: string[]
-  ): Promise<Album[]> {
-    const albumIds: string[] = []
-
-    for (const i of artistIds) {
-      let offset = 0
-      let res = await this.api.getArtistAlbums(i, { offset, limit: 50 })
-      albumIds.push(...res.items.map(a => a.id))
-      offset += 50
-
-      while (res.next !== null) {
-        res = await this.api.getArtistAlbums(i, { offset: offset += 50, limit: 50 })
-        albumIds.push(...res.items.map(a => a.id))
-      }
-    }
-
-    return await this.albumsToAlbums(albumIds)
-  }
 }

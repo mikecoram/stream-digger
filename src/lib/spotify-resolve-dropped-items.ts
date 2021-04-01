@@ -25,12 +25,10 @@ export const droppedItemsToAlbums = async (
   const trackIds = items.filter(i => i.type === 'track').map(i => i.id)
   const playlistIds = items.filter(i => i.type === 'playlist').map(i => i.id)
   const albumIds = items.filter(i => i.type === 'album').map(i => i.id)
-  const artistIds = items.filter(i => i.type === 'artist').map(i => i.id)
 
   return removeDuplicates([
     ...await spotify.tracksToAlbums(trackIds),
     ...await spotify.playlistsToAlbums(playlistIds),
     ...await spotify.albumsToAlbums(albumIds),
-    ...await spotify.artistsToAlbums(artistIds)
   ])
 }
