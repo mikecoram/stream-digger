@@ -42,6 +42,7 @@ class ReleasesTableRow extends React.Component<Props> {
                 key={`${album.id}-${m.id}`}
                 href={encodeURI(`https://google.com/search?q=${m.search} ${artists} ${album.name}`)}
                 className='releasesTable__merchantLink'
+                target="_blank"
               >
                 {m.text}
               </a>
