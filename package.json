@@ -30,8 +30,7 @@
   },
   "ts-standard": {
     "ignore": [
-      "src/react-app-env.d.ts",
-      "src/index.tsx"
+      "src/react-app-env.d.ts"
     ]
   },
   "browserslist": {

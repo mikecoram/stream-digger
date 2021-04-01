@@ -4,15 +4,16 @@ import './index.css'
 import App from './components/App'
 import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
 
-const render = () =>
+const render = (): void => {
   ReactDOM.render(
     <React.StrictMode>
       <App />
     </React.StrictMode>,
     document.getElementById('root')
   )
+}
 
-const pageLoad = async (): Promise<void> => {
+const pageLoad = (): void => {
   const hashFragment = window.location.toString().split('#')[1]
   const isSpotifyAuthCallback = hashFragment !== undefined
 
@@ -25,4 +26,4 @@ const pageLoad = async (): Promise<void> => {
   render()
 }
 
-void pageLoad()
+pageLoad()
