@@ -29,7 +29,7 @@ const render = async ({ isDragging = false } = {}) => {
   const isLoggedIn = session !== undefined && !session.isExpired
   let albums: Album[] = []
 
-  if (isLoggedIn) {
+  if (isLoggedIn && !isDragging) {
     albums = await getAlbums(
       session!.accessToken,
       storedItems.get()
