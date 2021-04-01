@@ -127,66 +127,31 @@ class App extends React.Component<{}, State> {
       .catch(err => { throw err })
   }
 
-  buttons (): JSX.Element {
-    const { albums } = this.state
-
-    return (
-      <div className='buttonContainer'>
-        {
-          albums.length > 0
-            ? <ClearAllBtn onClearItems={() => this.handleOnClearItems()} />
-            : null
-        }
-        <LogoutBtn onLogout={() => this.handleOnLogout()} />
-      </div>
-    )
-  }
-
-  content (): JSX.Element {
-    const { albums, isLoggedIn } = this.state
-
-    return (
-      <>
-        {!isLoggedIn && <Login />}
-        {isLoggedIn && albums.length > 0 && <ReleasesTable albums={albums} merchants={merchants} />}
-      </>
-    )
-  }
-
-  loading (): JSX.Element {
-    const { isLoading } = this.state
+  render (): JSX.Element {
+    const { albums, isDragging, isLoading, isLoggedIn } = this.state
 
     return (
       <>
         {isLoading && <LoadingOverlay />}
-      </>
-    )
-  }
-
-  dragAndDrop (): JSX.Element {
-    const { albums, isDragging, isLoggedIn } = this.state
-
-    return (
-      <>
         {isLoggedIn && isDragging && <DraggingOverlay />}
-        {isLoggedIn && !isDragging && albums.length === 0 && <DragPrompt />}
-      </>
-    )
-  }
 
-  render (): JSX.Element {
-    return (
-      <div className='app'>
-        <Header buttons={this.buttons()} />
+        <div className='app'>
+          <Header buttons={
+            <div className='buttonContainer'>
+              {isLoggedIn && albums.length > 0 && <ClearAllBtn onClearItems={() => this.handleOnClearItems()} />}
+              {isLoggedIn && <LogoutBtn onLogout={() => this.handleOnLogout()} />}
+            </div>
+          } />
 
-        <div className='content'>
-          {this.loading()}
-          {this.dragAndDrop()}
-          {this.content()}
+          <div className='content'>
+            {!isLoggedIn && <Login />}
+            {isLoggedIn && !isDragging && albums.length === 0 && <DragPrompt />}
+            {isLoggedIn && albums.length > 0 && <ReleasesTable albums={albums} merchants={merchants} />}
+          </div>
+
+          <Footer />
         </div>
-
-        <Footer />
-      </div>
+      </>
     )
   }
 }
