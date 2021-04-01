@@ -26,11 +26,12 @@ const getAlbums = async (
 
 const render = async ({ isDragging = false } = {}) => {
   const session = spotifyAuth.getSession()
+  const isLoggedIn = session !== undefined && !session.isExpired
   let albums: Album[] = []
 
-  if (session !== undefined) {
+  if (isLoggedIn) {
     albums = await getAlbums(
-      session.accessToken,
+      session!.accessToken,
       storedItems.get()
     )
   }
@@ -39,7 +40,7 @@ const render = async ({ isDragging = false } = {}) => {
     <React.StrictMode>
       <App 
         albums={albums}
-        isLoggedIn={session !== undefined}
+        isLoggedIn={isLoggedIn}
         isDragging={isDragging}
         onClearItems={clear}
         onLogout={logout}
