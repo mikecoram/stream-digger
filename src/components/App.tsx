@@ -50,7 +50,7 @@ class App extends React.Component<{}, State> {
 
     const session = spotifyAuth.getSession()
 
-    if (session !== undefined) {
+    if (session !== undefined && !session.isExpired) {
       this.resolveAlbums(session)
     }
   }
@@ -66,7 +66,6 @@ class App extends React.Component<{}, State> {
   handleWindowDrop (e: DragEvent): void {
     e.preventDefault()
     this.setState({ isDragging: false })
-
     const session = spotifyAuth.getSession()
 
     if (session === undefined || session.isExpired) {
