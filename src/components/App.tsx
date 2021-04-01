@@ -16,6 +16,7 @@ import Header from './Header'
 import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
+import { SpotifySession } from '../lib/models/spotify-session'
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
@@ -44,8 +45,10 @@ class App extends React.Component<{}, State> {
     window.addEventListener('dragenter', this.handleWindowDragStart.bind(this))
     window.addEventListener('dragleave', this.handleWindowDragEnd.bind(this))
 
-    if (this.state.isLoggedIn) {
-      this.resolveAlbums()
+    const session = spotifyAuth.getSession()
+
+    if (session !== undefined) {
+      this.resolveAlbums(session)
     }
   }
 
@@ -57,7 +60,7 @@ class App extends React.Component<{}, State> {
     return true
   }
 
-  async handleWindowDrop (e: DragEvent): Promise<void> {
+  handleWindowDrop (e: DragEvent): void {
     e.preventDefault()
     this.setState({ isDragging: false })
 
@@ -71,14 +74,15 @@ class App extends React.Component<{}, State> {
       return
     }
 
-    const spotifyURIs = onlySpotifyURIs(
-      await getPlainTextURIsFromDropEventData(e.dataTransfer)
-    )
+    getPlainTextURIsFromDropEventData(e.dataTransfer)
+      .then(URIs => {
+        const spotifyURIs = onlySpotifyURIs(URIs)
 
-    if (spotifyURIs.length !== 0) {
-      storedItems.append(getItemsFromDroppedURIs(spotifyURIs))
-      this.resolveAlbums()
-    }
+        if (spotifyURIs.length !== 0) {
+          storedItems.append(getItemsFromDroppedURIs(spotifyURIs))
+          this.resolveAlbums(session)
+        }
+      }).catch(err => { throw err })
   }
 
   handleWindowDragStart (e: DragEvent): void {
@@ -105,12 +109,13 @@ class App extends React.Component<{}, State> {
     }
   }
 
-  async resolveAlbums (): Promise<void> {
+  resolveAlbums (session: SpotifySession): void {
     const api = new SpotifyWebApi()
-    api.setAccessToken(spotifyAuth.getSession()!.accessToken)
+    api.setAccessToken(session.accessToken)
     const spotify = new SpotifyResolver(api)
-    const albums = await droppedItemsToAlbums(spotify, storedItems.get())
-    this.setState({ albums })
+    droppedItemsToAlbums(spotify, storedItems.get())
+      .then(albums => this.setState({ albums }))
+      .catch(err => { throw err })
   }
 
   buttons (): JSX.Element {
