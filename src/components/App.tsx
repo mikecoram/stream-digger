@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { droppedItemsToAlbums } from '../lib/spotify-resolve-dropped-items'
+import { droppedItemsToAlbums, droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolve-dropped-items';
 import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
 import { LocalStorageSpotifyAuth } from '../lib/local-storage-spotify-auth'
@@ -121,8 +121,12 @@ class App extends React.Component<{}, State> {
     const spotify = new SpotifyResolver(api)
     this.setState({ isLoading: true })
 
-    droppedItemsToAlbums(spotify, storedItems.get())
-      .then(albums => this.setState({ albums, isLoading: false }))
+    droppedItemsToAlbumIds(spotify, storedItems.get())
+      .then(albumIds => {
+        albumsIdsToAlbums(spotify, albumIds)
+          .then(albums => this.setState({ albums, isLoading: false }))
+          .catch(err => { throw err })
+      })
       .catch(err => { throw err })
   }
 

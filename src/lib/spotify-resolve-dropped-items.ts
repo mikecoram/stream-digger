@@ -18,6 +18,28 @@ function removeDuplicates (
   return dedupedAlbums
 }
 
+export const albumsIdsToAlbums = async (
+  spotify: SpotifyResolver,
+  albumIds: string[]
+): Promise<Album[]> => {
+  return await spotify.albumsToAlbums(albumIds)
+}
+
+export const droppedItemsToAlbumIds = async (
+  spotify: SpotifyResolver,
+  items: DroppedSpotifyItem[]
+): Promise<string[]> => {
+  const trackIds = items.filter(i => i.type === 'track').map(i => i.id)
+  const playlistIds = items.filter(i => i.type === 'playlist').map(i => i.id)
+  const albumIds = items.filter(i => i.type === 'album').map(i => i.id)
+
+  return [...new Set([
+    ...await spotify.tracksToAlbumIds(trackIds),
+    ...await spotify.playlistsToAlbumIds(playlistIds),
+    ...albumIds
+  ]).values()]
+}
+
 export const droppedItemsToAlbums = async (
   spotify: SpotifyResolver,
   items: DroppedSpotifyItem[]

@@ -8,9 +8,9 @@ export class SpotifyResolver {
     this.api = api
   }
 
-  async tracksToAlbums (
+  async tracksToAlbumIds(
     trackIds: string[]
-  ): Promise<Album[]> {
+  ): Promise<string[]> {
     const albumIds: string[] = []
 
     if (trackIds.length > 0) {
@@ -23,12 +23,19 @@ export class SpotifyResolver {
       }
     }
 
+    return albumIds
+  }
+
+  async tracksToAlbums (
+    trackIds: string[]
+  ): Promise<Album[]> {
+    const albumIds = await this.tracksToAlbumIds(trackIds)
     return await this.albumsToAlbums(albumIds)
   }
 
-  async playlistsToAlbums (
+  async playlistsToAlbumIds (
     playlistIds: string[]
-  ): Promise<Album[]> {
+  ): Promise<string[]> {
     const albumIds: string[] = []
 
     for (const i of playlistIds) {
@@ -46,6 +53,13 @@ export class SpotifyResolver {
       }
     }
 
+    return albumIds
+  }
+
+  async playlistsToAlbums (
+    playlistIds: string[]
+  ): Promise<Album[]> {
+    const albumIds = await this.playlistsToAlbumIds(playlistIds)
     return await this.albumsToAlbums(albumIds)
   }
 
