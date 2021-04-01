@@ -17,7 +17,7 @@ class ReleasesTableRow extends React.Component<Props> {
     return (
       <tr>
         <td className='releasesTable__column'>
-          <img src={smallImage?.url} />
+          <img src={smallImage?.url} alt={`${artists} - ${album.name} album artwork`} />
         </td>
         <td className='releasesTable__column releasesTable__artistsColumn'>
           {artists}
