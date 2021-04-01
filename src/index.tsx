@@ -74,7 +74,7 @@ const renderWithDroppedItems = async (e: DragEvent): Promise<void> => {
   )
 
   if (spotifyURIs.length === 0) {
-    return
+    return render()
   }
 
   storedItems.append(getItemsFromDroppedURIs(spotifyURIs))
