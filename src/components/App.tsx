@@ -17,6 +17,7 @@ import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
 import { SpotifySession } from '../lib/models/spotify-session'
+import LoadingOverlay from './LoadingOverlay'
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
@@ -24,6 +25,7 @@ const storedItems = new LocalStorageDroppedSpotifyItems()
 interface State {
   albums: Album[]
   isDragging: boolean
+  isLoading: boolean
   isLoggedIn: boolean
 }
 
@@ -35,6 +37,7 @@ class App extends React.Component<{}, State> {
     this.state = {
       albums: [],
       isDragging: false,
+      isLoading: false,
       isLoggedIn: session !== undefined && !session.isExpired
     }
   }
@@ -74,6 +77,8 @@ class App extends React.Component<{}, State> {
       return
     }
 
+    this.setState({ isLoading: true })
+
     getPlainTextURIsFromDropEventData(e.dataTransfer)
       .then(URIs => {
         const spotifyURIs = onlySpotifyURIs(URIs)
@@ -81,6 +86,8 @@ class App extends React.Component<{}, State> {
         if (spotifyURIs.length !== 0) {
           storedItems.append(getItemsFromDroppedURIs(spotifyURIs))
           this.resolveAlbums(session)
+        } else {
+          this.setState({ isLoading: false })
         }
       }).catch(err => { throw err })
   }
@@ -113,8 +120,10 @@ class App extends React.Component<{}, State> {
     const api = new SpotifyWebApi()
     api.setAccessToken(session.accessToken)
     const spotify = new SpotifyResolver(api)
+    this.setState({ isLoading: true })
+
     droppedItemsToAlbums(spotify, storedItems.get())
-      .then(albums => this.setState({ albums }))
+      .then(albums => this.setState({ albums, isLoading: false }))
       .catch(err => { throw err })
   }
 
@@ -134,24 +143,33 @@ class App extends React.Component<{}, State> {
   }
 
   content (): JSX.Element {
-    const { albums, isDragging, isLoggedIn } = this.state
-
-    if (!isLoggedIn) {
-      return <Login />
-    }
-
-    if (albums.length === 0) {
-      return (
-        isDragging
-          ? <DraggingOverlay />
-          : <DragPrompt />
-      )
-    }
+    const { albums, isLoggedIn } = this.state
 
     return (
       <>
-        <ReleasesTable albums={albums} merchants={merchants} />
-        {isDragging && <DraggingOverlay />}
+        {!isLoggedIn && <Login />}
+        {isLoggedIn && albums.length > 0 && <ReleasesTable albums={albums} merchants={merchants} />}
+      </>
+    )
+  }
+
+  loading (): JSX.Element {
+    const { isLoading } = this.state
+
+    return (
+      <>
+        {isLoading && <LoadingOverlay />}
+      </>
+    )
+  }
+
+  dragAndDrop (): JSX.Element {
+    const { albums, isDragging, isLoggedIn } = this.state
+
+    return (
+      <>
+        {isLoggedIn && isDragging && <DraggingOverlay />}
+        {isLoggedIn && !isDragging && albums.length === 0 && <DragPrompt />}
       </>
     )
   }
@@ -160,9 +178,13 @@ class App extends React.Component<{}, State> {
     return (
       <div className='app'>
         <Header buttons={this.buttons()} />
+
         <div className='content'>
+          {this.loading()}
+          {this.dragAndDrop()}
           {this.content()}
         </div>
+
         <Footer />
       </div>
     )
