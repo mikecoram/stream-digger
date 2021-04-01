@@ -9,7 +9,7 @@ import { Login } from './Login'
 import { merchants } from '../lib/merchants'
 import { SpotifyResolver } from '../lib/spotify-resolver'
 import ClearAllBtn from './ClearAllBtn'
-import DragoverPrompt from './DragoverPrompt'
+import DraggingOverlay from './DraggingOverlay'
 import DragPrompt from './DragPrompt'
 import Footer from './Footer'
 import Header from './Header'
@@ -140,15 +140,20 @@ class App extends React.Component<{}, State> {
       return <Login />
     }
 
-    if (isDragging) {
-      return <DragoverPrompt />
-    }
-
     if (albums.length === 0) {
-      return <DragPrompt />
+      return (
+        isDragging
+          ? <DraggingOverlay />
+          : <DragPrompt />
+      )
     }
 
-    return <ReleasesTable albums={albums} merchants={merchants} />
+    return (
+      <>
+        <ReleasesTable albums={albums} merchants={merchants} />
+        {isDragging && <DraggingOverlay />}
+      </>
+    )
   }
 
   render (): JSX.Element {
