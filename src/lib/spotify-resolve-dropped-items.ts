@@ -29,6 +29,6 @@ export const droppedItemsToAlbums = async (
   return removeDuplicates([
     ...await spotify.tracksToAlbums(trackIds),
     ...await spotify.playlistsToAlbums(playlistIds),
-    ...await spotify.albumsToAlbums(albumIds),
+    ...await spotify.albumsToAlbums(albumIds)
   ])
 }

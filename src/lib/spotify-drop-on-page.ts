@@ -35,18 +35,18 @@ export const getItemsFromDroppedURIs = (URIs: string[]): DroppedSpotifyItem[] =>
       u.includes('https://open.spotify.com/playlist/') ||
       u.match(/https:\/\/open.spotify.com\/user\/.*\/playlist/) !== null
   )
-  .map((u: string) => {
-    if (u.includes('playlist')) {
-      return {
-        id: u.split('playlist/')[1],
-        type: 'playlist' as DroppedSpotifyItemType
+    .map((u: string) => {
+      if (u.includes('playlist')) {
+        return {
+          id: u.split('playlist/')[1],
+          type: 'playlist' as DroppedSpotifyItemType
+        }
       }
-    }
 
-    const [type, id] = u.split('https://open.spotify.com/')[1].split('/')
+      const [type, id] = u.split('https://open.spotify.com/')[1].split('/')
 
-    return {
-      id,
-      type: type as DroppedSpotifyItemType
-    }
-  })
+      return {
+        id,
+        type: type as DroppedSpotifyItemType
+      }
+    })
