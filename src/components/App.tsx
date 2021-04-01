@@ -43,7 +43,10 @@ class App extends React.Component<{}, State> {
     window.addEventListener('dragover', this.handleWindowDragStart.bind(this))
     window.addEventListener('dragenter', this.handleWindowDragStart.bind(this))
     window.addEventListener('dragleave', this.handleWindowDragEnd.bind(this))
-    this.resolveAlbums()
+
+    if (this.state.isLoggedIn) {
+      this.resolveAlbums()
+    }
   }
 
   componentWillUnmount (): boolean {
@@ -56,18 +59,17 @@ class App extends React.Component<{}, State> {
 
   async handleWindowDrop (e: DragEvent): Promise<void> {
     e.preventDefault()
-
-    if (e.dataTransfer === null) {
-      return
-    }
+    this.setState({ isDragging: false })
 
     const session = spotifyAuth.getSession()
 
     if (session === undefined || session.isExpired) {
-      return
+      return this.setState({ isLoggedIn: false })
     }
 
-    this.setState({ isDragging: false })
+    if (e.dataTransfer === null) {
+      return
+    }
 
     const spotifyURIs = onlySpotifyURIs(
       await getPlainTextURIsFromDropEventData(e.dataTransfer)
@@ -104,17 +106,10 @@ class App extends React.Component<{}, State> {
   }
 
   async resolveAlbums (): Promise<void> {
-    const items = storedItems.get()
-    const session = spotifyAuth.getSession()
-
-    if (session === undefined || session.isExpired) {
-      return this.setState({ albums: [] })
-    }
-
     const api = new SpotifyWebApi()
-    api.setAccessToken(session.accessToken)
+    api.setAccessToken(spotifyAuth.getSession()!.accessToken)
     const spotify = new SpotifyResolver(api)
-    const albums = await droppedItemsToAlbums(spotify, items)
+    const albums = await droppedItemsToAlbums(spotify, storedItems.get())
     this.setState({ albums })
   }
 
