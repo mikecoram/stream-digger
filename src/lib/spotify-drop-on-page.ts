@@ -25,28 +25,24 @@ export const onlySpotifyURIs = (URIs: string[]): string[] =>
   URIs.filter((u: string) =>
     u.includes('https://open.spotify.com/track/') ||
     u.includes('https://open.spotify.com/album/') ||
-    u.includes('https://open.spotify.com/playlist/')
+    u.includes('https://open.spotify.com/playlist/') ||
+    /https:\/\/open\.spotify\.com\/user\/.*\/playlist\/.*/.test(u)
   )
 
-export const getItemsFromDroppedURIs = (URIs: string[]): DroppedSpotifyItem[] =>
-  URIs.filter((u: string) =>
-    u.includes('https://open.spotify.com/track/') ||
-      u.includes('https://open.spotify.com/album/') ||
-      u.includes('https://open.spotify.com/playlist/') ||
-      u.match(/https:\/\/open.spotify.com\/user\/.*\/playlist/) !== null
-  )
-    .map((u: string) => {
-      if (u.includes('playlist')) {
-        return {
-          id: u.split('playlist/')[1],
-          type: 'playlist' as DroppedSpotifyItemType
-        }
-      }
-
-      const [type, id] = u.split('https://open.spotify.com/')[1].split('/')
-
+export const getItemsFromDroppedURIs = (spotifyURIs: string[]): DroppedSpotifyItem[] => {
+  return spotifyURIs.map((u: string) => {
+    if (u.includes('playlist')) {
       return {
-        id,
-        type: type as DroppedSpotifyItemType
+        id: u.split('playlist/')[1],
+        type: 'playlist' as DroppedSpotifyItemType
       }
-    })
+    }
+
+    const [type, id] = u.split('https://open.spotify.com/')[1].split('/')
+
+    return {
+      id,
+      type: type as DroppedSpotifyItemType
+    }
+  })
+}

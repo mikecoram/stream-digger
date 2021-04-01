@@ -141,7 +141,8 @@ class App extends React.Component<{}, State> {
               {isLoggedIn && albums.length > 0 && <ClearAllBtn onClearItems={() => this.handleOnClearItems()} />}
               {isLoggedIn && <LogoutBtn onLogout={() => this.handleOnLogout()} />}
             </div>
-          } />
+          }
+          />
 
           <div className='content'>
             {!isLoggedIn && <Login />}
