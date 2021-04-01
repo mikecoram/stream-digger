@@ -4,7 +4,14 @@ import './index.css'
 import App from './components/App'
 import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
 
-const render = (): void => {
+const hashFragment = window.location.toString().split('#')[1]
+const isSpotifyAuthCallback = hashFragment !== undefined
+
+if (isSpotifyAuthCallback) {
+  const spotifyAuth = new LocalStorageSpotifyAuth()
+  spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
+  window.location.replace(`${window.location.pathname}`)
+} else {
   ReactDOM.render(
     <React.StrictMode>
       <App />
@@ -12,18 +19,3 @@ const render = (): void => {
     document.getElementById('root')
   )
 }
-
-const pageLoad = (): void => {
-  const hashFragment = window.location.toString().split('#')[1]
-  const isSpotifyAuthCallback = hashFragment !== undefined
-
-  if (isSpotifyAuthCallback) {
-    const spotifyAuth = new LocalStorageSpotifyAuth()
-    spotifyAuth.setSessionFromCallbackHashFragment(hashFragment)
-    return window.location.replace(`${window.location.pathname}`)
-  }
-
-  render()
-}
-
-pageLoad()
