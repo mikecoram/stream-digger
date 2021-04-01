@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './components/App'
 import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
-import { getItemsFromDropEvent } from './lib/spotify-drop-on-page'
+import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from './lib/spotify-drop-on-page';
 import { LocalStorageDroppedSpotifyItems } from './lib/local-storage-dropped-spotify-items'
 import { DroppedSpotifyItem } from './lib/models/spotify-drop'
 import SpotifyWebApi from 'spotify-web-api-js'
@@ -65,7 +65,19 @@ const clear = (): void => {
 }
 
 const renderWithDroppedItems = async (e: DragEvent): Promise<void> => {
-  storedItems.append(await getItemsFromDropEvent(e))
+  if (e.dataTransfer === null) {
+    return
+  }
+
+  const spotifyURIs = onlySpotifyURIs(
+    await getPlainTextURIsFromDropEventData(e.dataTransfer)
+  )
+
+  if (spotifyURIs.length === 0) {
+    return
+  }
+
+  storedItems.append(getItemsFromDroppedURIs(spotifyURIs))
   render()
 }
 

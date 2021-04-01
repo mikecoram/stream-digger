@@ -22,14 +22,15 @@ export async function getPlainTextURIsFromDropEventData (data: DataTransfer): Pr
   throw new Error('no URIs item found')
 }
 
-export async function getItemsFromDropEvent (e: DragEvent): Promise<DroppedSpotifyItem[]> {
-  if (e.dataTransfer === null) {
-    throw new Error('null data transfer object')
-  }
+export const onlySpotifyURIs = (URIs: string[]): string[] =>
+  URIs.filter((u: string) =>
+    u.includes('https://open.spotify.com/track/') ||
+    u.includes("https://open.spotify.com/album/") ||
+    u.includes("https://open.spotify.com/playlist/")
+  )
 
-  const spotifyURIs = await getPlainTextURIsFromDropEventData(e.dataTransfer)
-
-  const spotifyObjects = spotifyURIs
+export const getItemsFromDroppedURIs = (URIs: string[]): DroppedSpotifyItem[] =>
+  URIs
     .filter((u: string) => {
       return u.includes('https://open.spotify.com/track/') ||
         u.includes("https://open.spotify.com/album/") ||
@@ -50,6 +51,3 @@ export async function getItemsFromDropEvent (e: DragEvent): Promise<DroppedSpoti
         type: type as DroppedSpotifyItemType
       }
     })
-
-  return spotifyObjects
-}
