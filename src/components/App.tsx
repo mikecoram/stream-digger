@@ -10,31 +10,129 @@ import Footer from './Footer'
 import { Login } from './Login'
 import DragoverPrompt from './DragoverPrompt'
 import { Album } from '../lib/models/album'
+import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
+import { LocalStorageSpotifyAuth } from '../lib/local-storage-spotify-auth'
+import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
+import { DroppedSpotifyItem } from '../lib/models/spotify-drop'
+import SpotifyWebApi from 'spotify-web-api-js'
+import { droppedItemsToAlbums } from '../lib/spotify-resolve-dropped-items'
+import { SpotifyResolver } from '../lib/spotify-resolver'
 
-interface Props {
+const spotifyAuth = new LocalStorageSpotifyAuth()
+const storedItems = new LocalStorageDroppedSpotifyItems()
+
+interface State {
   albums: Album[]
-  isLoggedIn: boolean
   isDragging: boolean
-  onClearItems: () => void
-  onLogout: () => void
+  isLoggedIn: boolean
 }
 
-class App extends React.Component<Props> {
+const getAlbums = async (
+  accessToken: string,
+  items: DroppedSpotifyItem[],
+): Promise<Album[]> => {
+  const api = new SpotifyWebApi()
+  api.setAccessToken(accessToken)
+  const spotify = new SpotifyResolver(api)
+  return await droppedItemsToAlbums(spotify, items)
+}
+
+class App extends React.Component<{}, State> {
+  constructor(props: {}) {
+    super(props)
+    const session = spotifyAuth.getSession()
+
+    this.state = {
+      albums: [],
+      isDragging: false,
+      isLoggedIn: session !== undefined && !session.isExpired,
+    }
+  }
+
+  async componentDidMount() {
+    window.addEventListener('drop', async (e) => {
+      e.preventDefault()
+      const session = spotifyAuth.getSession()
+
+      if (session === undefined || session.isExpired) {
+        return
+      }
+
+      if (e.dataTransfer === null) {
+        return
+      }
+
+      const spotifyURIs = onlySpotifyURIs(
+        await getPlainTextURIsFromDropEventData(e.dataTransfer)
+      )
+
+      if (spotifyURIs.length !== 0) {
+        storedItems.append(getItemsFromDroppedURIs(spotifyURIs))
+        const albums = await getAlbums(session.accessToken, storedItems.get())
+        return this.setState({ albums, isDragging: false })
+      }
+
+      this.setState({ isDragging: false })
+    })
+
+    window.addEventListener('dragover', (e) => {
+      e.preventDefault()
+      this.setState({ isDragging: true })
+    })
+
+    window.addEventListener('dragenter', (e) => {
+      e.preventDefault()
+      this.setState({ isDragging: true })
+    })
+
+    window.addEventListener('dragleave', (e) => {
+      e.preventDefault()
+      this.setState({ isDragging: false })
+    })
+
+    const session = spotifyAuth.getSession()
+
+    if (session === undefined || session.isExpired) {
+      return
+    }
+
+    const albums = await getAlbums(session.accessToken, storedItems.get())
+    this.setState({ albums })
+  }
+
+  componentWillUnmount() {
+    return true
+  }
+
+  onClearItems() {
+    if (window.confirm('Are you sure you want to clear all items?')) {
+      storedItems.clear()
+      this.setState({ albums: [] })
+    }
+  }
+
+  onLogout() {
+    if (window.confirm('Are you sure you want to logout?')) {
+      spotifyAuth.clearSession()
+      this.setState({ albums: [], isLoggedIn: false })
+    }
+  }
+
   buttons (showClearAll: boolean): JSX.Element {
     return (
       <div className='buttonContainer'>
         {
           showClearAll
-            ? <ClearAllBtn onClearItems={this.props.onClearItems.bind(this)} />
+            ? <ClearAllBtn onClearItems={() => this.onClearItems()} />
             : null
         }
-        <LogoutBtn onLogout={this.props.onLogout.bind(this)} />
+        <LogoutBtn onLogout={() => this.onLogout()} />
       </div>
     )
   }
 
   content (): JSX.Element {
-    const { albums, isDragging, isLoggedIn } = this.props
+    const { albums, isDragging, isLoggedIn } = this.state
 
     if (!isLoggedIn) {
       return <Login />
@@ -52,7 +150,7 @@ class App extends React.Component<Props> {
   }
 
   render (): JSX.Element {
-    const { albums } = this.props
+    const { albums } = this.state
 
     return (
       <div className='app'>
