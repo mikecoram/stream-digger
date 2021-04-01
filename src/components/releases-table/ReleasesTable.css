@@ -35,9 +35,22 @@
 
 .releasesTable__artistsColumn {
   min-width: 15rem;
+  font-weight: 500;
 }
 
 .releasesTable__albumColumn {
   min-width: 20rem;
   padding-right: 0.8em;
+}
+
+.releasesTable__albumName {
+  font-weight: 500;
+}
+
+.releasesTable__albumLabel {
+  font-size: 0.8em;
+}
+
+.releasesTable__albumLabel__label {
+  font-weight: 450;
 }

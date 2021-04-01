@@ -1,14 +1,16 @@
+on drag events - check is spotify event before doing anything
 show dragoverprompt as an overlay
-label as subheading of release?
-striped row styling
+striped row styling / nicer table styling
 pagination
 filtering
 better handling of drop events to avoid excess http requests
 save/load bought state
-nicer table styling
 add gif to readme
 improve readme
 PKCE oauth method
+terms and conditions?
+  spotify api
+  cookies?
 host somewhere
 
 other spotify apps:

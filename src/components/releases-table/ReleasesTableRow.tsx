@@ -23,10 +23,17 @@ class ReleasesTableRow extends React.Component<Props> {
           {artists}
         </td>
         <td className='releasesTable__column releasesTable__albumColumn'>
-          {album.name}
-        </td>
-        <td className='releasesTable__column releasesTable__labelColumn'>
-          {album.label}
+          <div className='releasesTable__albumName'>
+            {album.name}
+          </div>
+
+          <div className='releasesTable__albumLabel'>
+            <span>on </span>
+
+            <span className='releasesTable__albumLabel__label'>
+              {album.label}
+            </span>
+          </div>
         </td>
         <td className='releasesTable__column'>
           {
