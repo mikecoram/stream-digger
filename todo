@@ -2,6 +2,7 @@ on drag events - check is spotify event before doing anything
 show dragoverprompt as an overlay
 striped row styling / nicer table styling
 pagination
+homepage with intro text and gif
 filtering
 better handling of drop events to avoid excess http requests
 save/load bought state
