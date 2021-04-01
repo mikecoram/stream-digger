@@ -33,7 +33,7 @@ class ReleasesTable extends React.Component<Props> {
               Release
             </td>
             <td className='releasesTable__headColumn'>
-              Buy from
+              Find on
             </td>
             <td className='releasesTable__headColumn'>
               Bought
