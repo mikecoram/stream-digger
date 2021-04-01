@@ -8,16 +8,16 @@ import { LocalStorageSpotifyAuth } from '../lib/local-storage-spotify-auth'
 import { Login } from './Login'
 import { merchants } from '../lib/merchants'
 import { SpotifyResolver } from '../lib/spotify-resolver'
+import { SpotifySession } from '../lib/models/spotify-session'
 import ClearAllBtn from './ClearAllBtn'
 import DraggingOverlay from './DraggingOverlay'
 import DragPrompt from './DragPrompt'
 import Footer from './Footer'
 import Header from './Header'
+import LoadingOverlay from './LoadingOverlay'
 import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
-import { SpotifySession } from '../lib/models/spotify-session'
-import LoadingOverlay from './LoadingOverlay'
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
