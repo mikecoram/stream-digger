@@ -1,8 +1,8 @@
 show dragoverprompt as an overlay
-pagination
 homepage with intro text and gif
-filtering
-better handling of drop events to avoid excess http requests
+pagination
+filtering?
+remove rows
 save/load bought state
 add gif to readme
 improve readme

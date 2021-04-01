@@ -118,11 +118,13 @@ class App extends React.Component<{}, State> {
     this.setState({ albums })
   }
 
-  buttons (showClearAll: boolean): JSX.Element {
+  buttons (): JSX.Element {
+    const { albums } = this.state
+
     return (
       <div className='buttonContainer'>
         {
-          showClearAll
+          albums.length > 0
             ? <ClearAllBtn onClearItems={() => this.handleOnClearItems()} />
             : null
         }
@@ -150,11 +152,9 @@ class App extends React.Component<{}, State> {
   }
 
   render (): JSX.Element {
-    const { albums } = this.state
-
     return (
       <div className='app'>
-        <Header buttons={this.buttons(albums.length > 0)} />
+        <Header buttons={this.buttons()} />
         <div className='content'>
           {this.content()}
         </div>
