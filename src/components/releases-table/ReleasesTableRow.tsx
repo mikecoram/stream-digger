@@ -9,6 +9,8 @@ interface Props {
 }
 
 class ReleasesTableRow extends React.Component<Props> {
+  handleBoughtCheckboxOnChange (album: Album): void {}
+
   render (): JSX.Element {
     const { album, merchants } = this.props
     const artists = album.artists.map(a => a.name).join(', ')
@@ -17,7 +19,10 @@ class ReleasesTableRow extends React.Component<Props> {
     return (
       <tr className='releasesTable__row'>
         <td className='releasesTable__column'>
-          <img className='releasesTable__albumArtwork' src={smallImage?.url} alt={`${artists} - ${album.name} album artwork`} />
+          <img
+            className='releasesTable__albumArtwork'
+            src={smallImage?.url} alt={`${artists} - ${album.name} album artwork`}
+          />
         </td>
         <td className='releasesTable__column releasesTable__artistsColumn'>
           {artists}
@@ -39,10 +44,11 @@ class ReleasesTableRow extends React.Component<Props> {
           {
             merchants.map(m =>
               <a
-                key={`${album.id}-${m.id}`}
-                href={encodeURI(`https://google.com/search?q=${m.search} ${artists} ${album.name}`)}
                 className='releasesTable__merchantLink'
-                target="_blank"
+                href={encodeURI(`https://google.com/search?q=${m.search} ${artists} ${album.name}`)}
+                key={`${album.id}-${m.id}`}
+                rel='noreferrer'
+                target='_blank'
               >
                 {m.text}
               </a>
@@ -50,7 +56,11 @@ class ReleasesTableRow extends React.Component<Props> {
           }
         </td>
         <td className='releasesTable__column releasesTable__boughtColumn'>
-          <input className='releasesTable__boughtCheckbox' type='checkbox' />
+          <input
+            className='releasesTable__boughtCheckbox'
+            onChange={() => this.handleBoughtCheckboxOnChange(album)}
+            type='checkbox'
+          />
         </td>
       </tr>
     )
