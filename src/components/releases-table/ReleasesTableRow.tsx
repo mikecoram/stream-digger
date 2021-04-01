@@ -15,7 +15,7 @@ class ReleasesTableRow extends React.Component<Props> {
     const smallImage = album.images.find(i => i.height === 64)
 
     return (
-      <tr className="releasesTable__row">
+      <tr className='releasesTable__row'>
         <td className='releasesTable__column'>
           <img className='releasesTable__albumArtwork' src={smallImage?.url} alt={`${artists} - ${album.name} album artwork`} />
         </td>

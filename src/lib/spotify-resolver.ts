@@ -34,10 +34,14 @@ export class SpotifyResolver {
     for (const i of playlistIds) {
       let offset = 0
       let res = await this.api.getPlaylistTracks(i, { offset, limit: 50 })
+
+      // eslint-disable-next-line no-loop-func
       albumIds.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album.id))
 
       while (res.next !== null) {
         res = await this.api.getPlaylistTracks(i, { offset: offset += 50, limit: 50 })
+
+        // eslint-disable-next-line no-loop-func
         albumIds.push(...res.items.map(i => (i.track as SpotifyApi.TrackObjectFull).album.id))
       }
     }
