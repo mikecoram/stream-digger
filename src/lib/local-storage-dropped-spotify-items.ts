@@ -4,13 +4,8 @@ const key = 'spotifyItemReferences'
 
 export class LocalStorageDroppedSpotifyItems {
   get (): DroppedSpotifyItem[] {
-    const item = localStorage.getItem(key)
-
-    if (item === null) {
-      return []
-    }
-
-    return JSON.parse(item) as DroppedSpotifyItem[]
+    const lsEntry = localStorage.getItem(key) ?? '[]'
+    return JSON.parse(lsEntry) as DroppedSpotifyItem[]
   }
 
   append (items: DroppedSpotifyItem[]): void {

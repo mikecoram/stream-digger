@@ -1,8 +1,9 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolve-dropped-items';
+import { droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolve-dropped-items'
 import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
+import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
 import { LocalStorageSpotifyAuth } from '../lib/local-storage-spotify-auth'
 import { Login } from './Login'
@@ -18,7 +19,6 @@ import LoadingOverlay from './LoadingOverlay'
 import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
-import { LocalStorageAlbums } from '../lib/local-storage-albums';
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()

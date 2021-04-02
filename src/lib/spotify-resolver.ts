@@ -8,7 +8,7 @@ export class SpotifyResolver {
     this.api = api
   }
 
-  async tracksToAlbumIds(
+  async tracksToAlbumIds (
     trackIds: string[]
   ): Promise<string[]> {
     const albumIds: string[] = []
