@@ -7,6 +7,7 @@ import { Album } from '../../lib/models/album'
 interface Props {
   albums: Album[]
   merchants: Merchant[]
+  onChangeAlbum: (album: Album) => void
 }
 
 class ReleasesTable extends React.Component<Props> {
@@ -18,6 +19,7 @@ class ReleasesTable extends React.Component<Props> {
         key={a.id}
         album={a}
         merchants={merchants}
+        onChangeAlbum={this.props.onChangeAlbum}
       />
     )
 

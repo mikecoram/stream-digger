@@ -137,6 +137,11 @@ class App extends React.Component<{}, State> {
       .catch(err => { throw err })
   }
 
+  handleOnChangeAlbum (album: Album): void {
+    localAlbums.setOne(album)
+    this.setState({ albums: localAlbums.get() })
+  }
+
   render (): JSX.Element {
     const { albums, isDragging, isLoading, isLoggedIn } = this.state
 
@@ -157,7 +162,14 @@ class App extends React.Component<{}, State> {
           <div className='content'>
             {!isLoggedIn && <Login />}
             {isLoggedIn && !isDragging && albums.length === 0 && <DragPrompt />}
-            {isLoggedIn && albums.length > 0 && <ReleasesTable albums={albums} merchants={merchants} />}
+            {
+              isLoggedIn && albums.length > 0 &&
+                <ReleasesTable
+                  albums={albums}
+                  merchants={merchants}
+                  onChangeAlbum={this.handleOnChangeAlbum.bind(this)}
+                />
+            }
           </div>
 
           <Footer />

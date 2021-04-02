@@ -6,11 +6,10 @@ import { Album } from '../../lib/models/album'
 interface Props {
   album: Album
   merchants: Merchant[]
+  onChangeAlbum: (album: Album) => void
 }
 
 class ReleasesTableRow extends React.Component<Props> {
-  handleBoughtCheckboxOnChange (album: Album): void {}
-
   render (): JSX.Element {
     const { album, merchants } = this.props
     const artists = album.artists.map(a => a.name).join(', ')
@@ -58,8 +57,9 @@ class ReleasesTableRow extends React.Component<Props> {
         <td className='releasesTable__column releasesTable__boughtColumn'>
           <input
             className='releasesTable__boughtCheckbox'
-            onChange={() => this.handleBoughtCheckboxOnChange(album)}
+            onChange={(e) => this.props.onChangeAlbum({ ...album, bought: e.target.checked })}
             type='checkbox'
+            checked={album.bought}
           />
         </td>
       </tr>

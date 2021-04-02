@@ -12,6 +12,12 @@ export class LocalStorageAlbums {
     localStorage.setItem(key, JSON.stringify(albums))
   }
 
+  setOne (album: Album): void {
+    const albums = this.get()
+    Object.assign(albums.find(a => a.id === album.id), album)
+    this.set(albums)
+  }
+
   append (albums: Album[]): void {
     const lsEntry = localStorage.getItem(key) ?? '[]'
     const storedAlbums = JSON.parse(lsEntry) as Album[]
