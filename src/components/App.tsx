@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { droppedItemsToAlbums, droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolve-dropped-items';
+import { droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolve-dropped-items';
 import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
 import { LocalStorageSpotifyAuth } from '../lib/local-storage-spotify-auth'
@@ -18,9 +18,11 @@ import LoadingOverlay from './LoadingOverlay'
 import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
+import { LocalStorageAlbums } from '../lib/local-storage-albums';
 
 const spotifyAuth = new LocalStorageSpotifyAuth()
 const storedItems = new LocalStorageDroppedSpotifyItems()
+const localAlbums = new LocalStorageAlbums()
 
 interface State {
   albums: Album[]
@@ -123,8 +125,13 @@ class App extends React.Component<{}, State> {
 
     droppedItemsToAlbumIds(spotify, storedItems.get())
       .then(albumIds => {
-        albumsIdsToAlbums(spotify, albumIds)
-          .then(albums => this.setState({ albums, isLoading: false }))
+        const missingAlbumIds = localAlbums.idDifference(albumIds)
+
+        albumsIdsToAlbums(spotify, missingAlbumIds)
+          .then(missingAlbums => {
+            localAlbums.append(missingAlbums)
+            this.setState({ albums: localAlbums.get(), isLoading: false })
+          })
           .catch(err => { throw err })
       })
       .catch(err => { throw err })
