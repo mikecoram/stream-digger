@@ -1,14 +1,25 @@
 import React from 'react'
-import { getImplicitGrantURI } from '../lib/spotify-auth'
+import { getPKCEAuthorizeURL } from '../lib/spotify-auth'
 import './Login.css'
 
-export class Login extends React.Component {
+export class Login extends React.Component<{}, { href: string }> {
+  constructor(props: {}) {
+    super(props)
+    this.state = { href: '' }
+  }
+
+  async componentDidMount() {
+    this.setState({ href: await getPKCEAuthorizeURL()} )
+  }
+
   render (): React.ReactElement {
+    const { href } = this.state
+
     return (
       <a
         id='login-with-spotify'
         className='loginWithSpotify'
-        href={getImplicitGrantURI()}
+        href={href}
       >
         Login with Spotify
       </a>
