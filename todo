@@ -1,11 +1,13 @@
+PKCE oauth method
+'clear bought' button
+associate input trackIds with resolved albums
+  extra info to get bpm, key etc
 homepage with intro text and gif
 pagination
 filtering?
-remove rows
-save/load bought state
+remove row button
 add gif to readme
 improve readme
-PKCE oauth method
 terms and conditions?
   spotify api
   cookies?
