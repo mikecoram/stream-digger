@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolve-dropped-items'
+import { droppedItemsToAlbumIds, albumsIdsToAlbums, droppedItemsToTrackIds, trackIdsToTracks } from '../lib/spotify-resolve-dropped-items'
 import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
@@ -20,10 +20,12 @@ import LoadingOverlay from './LoadingOverlay'
 import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
+import { LocalStorageTracks } from '../lib/local-storage-tracks'
 
 const localSession = new LocalStorageSpotifySession()
 const storedItems = new LocalStorageDroppedSpotifyItems()
 const localAlbums = new LocalStorageAlbums()
+const localTracks = new LocalStorageTracks()
 
 interface State {
   albums: Album[]
@@ -118,6 +120,7 @@ class App extends React.Component<{}, State> {
   handleOnClearItems (): void {
     if (window.confirm('Are you sure you want to clear all items?')) {
       storedItems.clear()
+      localTracks.clear()
       localAlbums.clear()
       this.setState({ albums: [] })
     }
@@ -136,13 +139,27 @@ class App extends React.Component<{}, State> {
     const spotify = new SpotifyResolver(api)
     this.setState({ isLoading: true })
 
-    droppedItemsToAlbumIds(spotify, storedItems.get())
-      .then(albumIds => {
-        const missingAlbumIds = localAlbums.idDifference(albumIds)
+    Promise.all([
+      droppedItemsToAlbumIds(spotify, storedItems.get()),
+      droppedItemsToTrackIds(spotify, storedItems.get())
+    ])
+      .then(r => {
+        const [albumIds, trackIds] = r
 
-        albumsIdsToAlbums(spotify, missingAlbumIds)
-          .then(missingAlbums => {
-            localAlbums.append(missingAlbums)
+        Promise.all([
+          albumsIdsToAlbums(spotify, localAlbums.idDifference(albumIds)),
+          trackIdsToTracks(spotify, localTracks.idDifference(trackIds))
+        ])
+          .then((r) => {
+            const [albums, tracks] = r
+
+            albums.forEach(a => {
+              a.bought = false
+              a.importedTracks = tracks.filter(t => t.album.id === a.id)
+            })
+
+            localAlbums.append(albums)
+            localTracks.append(tracks)
             this.setState({ albums: localAlbums.get(), isLoading: false })
           })
           .catch(err => { throw err })

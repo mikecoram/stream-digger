@@ -26,11 +26,48 @@ export class SpotifyResolver {
     return albumIds
   }
 
+  async tracksToTracks (
+    trackIds: string[]
+  ): Promise<SpotifyApi.TrackObjectFull[]> {
+    const tracks: SpotifyApi.TrackObjectFull[] = []
+
+    if (trackIds.length > 0) {
+      let i = 0; let trackIdsChunk
+
+      while ((trackIdsChunk = trackIds.slice(i, i + 50)).length > 0) {
+        const res = await this.api.getTracks(trackIdsChunk)
+        tracks.push(...res.tracks)
+        i += 50
+      }
+    }
+
+    return tracks
+  }
+
   async tracksToAlbums (
     trackIds: string[]
   ): Promise<Album[]> {
     const albumIds = await this.tracksToAlbumIds(trackIds)
     return await this.albumsToAlbums(albumIds)
+  }
+
+  async playlistsToTrackIds (
+    playlistIds: string[]
+  ): Promise<string[]> {
+    const trackIds: string[] = []
+
+    for (const i of playlistIds) {
+      let offset = 0
+      let res = await this.api.getPlaylistTracks(i, { offset, limit: 50 })
+      trackIds.push(...res.items.map(i => i.track.id))
+
+      while (res.next !== null) {
+        res = await this.api.getPlaylistTracks(i, { offset: offset += 50, limit: 50 })
+        trackIds.push(...res.items.map(i => i.track.id))
+      }
+    }
+
+    return trackIds
   }
 
   async playlistsToAlbumIds (
@@ -79,5 +116,23 @@ export class SpotifyResolver {
     }
 
     return albums
+  }
+
+  async albumsToTrackIds (
+    albumIds: string[]
+  ): Promise<string[]> {
+    const trackIds: string[] = []
+
+    if (albumIds.length > 0) {
+      let i = 0; let albumIdsChunk
+
+      while ((albumIdsChunk = albumIds.slice(i, i + 20)).length > 0) {
+        const res = await this.api.getAlbums(albumIdsChunk)
+        res.albums.forEach(a => trackIds.push(...a.tracks.items.map(i => i.id)))
+        i += 20
+      }
+    }
+
+    return trackIds
   }
 }
