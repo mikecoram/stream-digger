@@ -14,6 +14,7 @@ class ReleasesTableRow extends React.Component<Props> {
     const { album, merchants } = this.props
     const artists = album.artists.map(a => a.name).join(', ')
     const smallImage = album.images.find(i => i.height === 64)
+    const { importedTracks } = album
 
     return (
       <tr className='releasesTable__row'>
@@ -40,6 +41,18 @@ class ReleasesTableRow extends React.Component<Props> {
           </div>
         </td>
         <td className='releasesTable__column'>
+          <div className='releasesTable__albumTracksList'>
+            {
+              importedTracks.map(t =>
+                <span key={t.id}>
+                  {t.name}
+                  {t !== importedTracks[importedTracks.length-1] && <>, </>}
+                </span>
+              )
+            }
+          </div>
+        </td>
+        <td className='releasesTable__column releasesTable__merchantsColumn'>
           {
             merchants.map(m =>
               <a

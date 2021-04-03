@@ -27,19 +27,22 @@ class ReleasesTable extends React.Component<Props> {
       <table className='releasesTable' cellSpacing='0' cellPadding='0'>
         <thead className='releasesTable__head'>
           <tr>
-            <td className='releasesTable__headColumn releasesTable__headColumn__artwork' />
-            <td className='releasesTable__headColumn'>
+            <th className='releasesTable__headColumn releasesTable__headColumn__artwork' />
+            <th className='releasesTable__headColumn'>
               Artists
-            </td>
-            <td className='releasesTable__headColumn'>
+            </th>
+            <th className='releasesTable__headColumn'>
               Release
-            </td>
-            <td className='releasesTable__headColumn'>
+            </th>
+            <th className='releasesTable__headColumn'>
+              Imported Tracks
+            </th>
+            <th className='releasesTable__headColumn'>
               Find on
-            </td>
-            <td className='releasesTable__headColumn'>
+            </th>
+            <th className='releasesTable__headColumn'>
               Bought
-            </td>
+            </th>
           </tr>
         </thead>
         <tbody className='releasesTable__tbody'>

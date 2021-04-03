@@ -152,14 +152,16 @@ class App extends React.Component<{}, State> {
         ])
           .then((r) => {
             const [albums, tracks] = r
+            localTracks.append(tracks)
+            localAlbums.append(albums)
 
-            albums.forEach(a => {
+            const newAlbums = localAlbums.get().map(a => {
               a.bought = false
-              a.importedTracks = tracks.filter(t => t.album.id === a.id)
+              a.importedTracks = (a.importedTracks ?? []).concat(tracks.filter(t => t.album.id === a.id))
+              return a
             })
 
-            localAlbums.append(albums)
-            localTracks.append(tracks)
+            localAlbums.set(newAlbums)
             this.setState({ albums: localAlbums.get(), isLoading: false })
           })
           .catch(err => { throw err })

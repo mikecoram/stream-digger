@@ -1,6 +1,5 @@
 .releasesTable {
-  display: block;
-  width: auto;
+  width: 100%;
 }
 
 .releasesTable__head {
@@ -9,10 +8,19 @@
 
 .releasesTable__headColumn {
   padding-bottom:0.6em;
+  text-align: left;
+  background: #fff;
+  position: sticky;
+  z-index: 1;
+  top: 0;
 }
 
 .releasesTable__headColumn__artwork {
   padding-right: 5em;
+}
+
+.releasesTable__column {
+  padding: 0.2rem;
 }
 
 .releasesTable__albumArtwork {
@@ -20,7 +28,14 @@
 }
 
 .releasesTable__merchantLink {
-  margin-right: 0.6rem;
+  margin-right: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.releasesTable__merchantsColumn {
+  word-break: break-all;
+  width: 15em;
+  padding: 0.6em;
 }
 
 .releasesTable__tbody .releasesTable__row:nth-child(odd) {
@@ -37,13 +52,13 @@
 }
 
 .releasesTable__artistsColumn {
-  min-width: 15rem;
+  min-width: 10rem;
   font-weight: 500;
 }
 
 .releasesTable__albumColumn {
-  min-width: 20rem;
-  padding-right: 0.8em;
+  min-width: 14rem;
+  font-weight: 500;
 }
 
 .releasesTable__albumName {
@@ -56,4 +71,9 @@
 
 .releasesTable__albumLabel__label {
   font-weight: 450;
+}
+
+.releasesTable__albumTracksList {
+  list-style: none;
+  font-size: 0.8em;
 }
