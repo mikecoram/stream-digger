@@ -118,6 +118,7 @@ class App extends React.Component<{}, State> {
   handleOnClearItems (): void {
     if (window.confirm('Are you sure you want to clear all items?')) {
       storedItems.clear()
+      localAlbums.clear()
       this.setState({ albums: [] })
     }
   }

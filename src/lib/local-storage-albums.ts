@@ -28,4 +28,8 @@ export class LocalStorageAlbums {
     const presentAlbumIds = this.get().map(a => a.id)
     return albumIds.filter(a => !presentAlbumIds.includes(a))
   }
+
+  clear (): void {
+    localStorage.removeItem(key)
+  }
 }
