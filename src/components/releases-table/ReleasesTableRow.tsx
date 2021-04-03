@@ -44,10 +44,9 @@ class ReleasesTableRow extends React.Component<Props> {
           <div className='releasesTable__albumTracksList'>
             {
               importedTracks.map(t =>
-                <span key={t.id}>
+                <div key={t.id}>
                   {t.name} ({Math.round(t.audioFeatures.tempo)} bpm)
-                  {t !== importedTracks[importedTracks.length-1] && <>, </>}
-                </span>
+                </div>
               )
             }
           </div>

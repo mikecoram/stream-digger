@@ -35,7 +35,7 @@ class ReleasesTable extends React.Component<Props> {
               Release
             </th>
             <th className='releasesTable__headColumn'>
-              Imported Tracks
+              Imported tracks
             </th>
             <th className='releasesTable__headColumn'>
               Find on

@@ -1,6 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-js'
 import { Album } from './models/album'
-import { Track } from './models/track';
+import { Track } from './models/track'
 
 export class SpotifyResolver {
   api: SpotifyWebApi.SpotifyWebApiJs

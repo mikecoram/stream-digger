@@ -1,7 +1,7 @@
 import { Album } from './models/album'
 import { DroppedSpotifyItem } from './models/spotify-drop'
 import { SpotifyResolver } from './spotify-resolver'
-import { Track } from './models/track';
+import { Track } from './models/track'
 
 export const albumsIdsToAlbums = async (
   spotify: SpotifyResolver,

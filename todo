@@ -1,5 +1,5 @@
-associate input trackIds with resolved albums
-  extra info to get bpm, key etc
+display track key, duration, loudness
+address performance of drag when lots of tracks present (limit to 10 per page?)
 'clear bought' button
 homepage with intro text and gif
 pagination
