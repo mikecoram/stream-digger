@@ -2,6 +2,7 @@ import React from 'react'
 import './ReleasesTable.css'
 import { Merchant } from '../../lib/models/merchant'
 import { Album } from '../../lib/models/album'
+import { getKey } from '../../lib/music';
 
 interface Props {
   album: Album
@@ -45,7 +46,7 @@ class ReleasesTableRow extends React.Component<Props> {
             {
               importedTracks.map(t =>
                 <div key={t.id}>
-                  {t.name} ({Math.round(t.audioFeatures.tempo)} bpm)
+                  {t.name} ({Math.round(t.audioFeatures.tempo)} bpm, {getKey(t.audioFeatures.key, t.audioFeatures.mode)})
                 </div>
               )
             }
