@@ -59,7 +59,7 @@ class ReleasesTableRow extends React.Component<Props> {
             className='releasesTable__boughtCheckbox'
             onChange={(e) => this.props.onChangeAlbum({ ...album, bought: e.target.checked })}
             type='checkbox'
-            checked={album.bought}
+            checked={album.bought ?? false}
           />
         </td>
       </tr>
