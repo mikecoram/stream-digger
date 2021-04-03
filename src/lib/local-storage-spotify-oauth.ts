@@ -1,3 +1,5 @@
+import { TokenResponse } from './models/oauth-token-response'
+
 const clientId = 'd48e33355f30490aa2a952bbf70055ad'
 const redirectURI = 'http://localhost:3000'
 const localStorageStateKey = 'pkce_state'
@@ -50,7 +52,7 @@ export class LocalStorageSpotifyOAuth {
     return localStorage.getItem(localStorageStateKey)
   }
 
-  async getToken (code: string): Promise<any> {
+  async getToken (code: string): Promise<TokenResponse> {
     const res = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
@@ -62,6 +64,22 @@ export class LocalStorageSpotifyOAuth {
         code,
         redirect_uri: redirectURI,
         code_verifier: localStorage.getItem(localStorageCodeVerifierKey) ?? ''
+      }).toString()
+    })
+
+    return await res.json()
+  }
+
+  async refreshToken (refreshToken: string): Promise<TokenResponse> {
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        client_id: clientId,
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
       }).toString()
     })
 
