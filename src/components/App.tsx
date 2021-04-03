@@ -65,6 +65,7 @@ class App extends React.Component<{}, State> {
     if (session.isExpired) {
       const oauth = new LocalStorageSpotifyOAuth()
       const res = await oauth.refreshToken(session.refreshToken)
+      oauth.clear()
       localSession.setFromTokenResponse(res)
     }
   }

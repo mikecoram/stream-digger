@@ -2,8 +2,8 @@ import { TokenResponse } from './models/oauth-token-response'
 
 const clientId = 'd48e33355f30490aa2a952bbf70055ad'
 const redirectURI = 'http://localhost:3000'
-const localStorageStateKey = 'pkce_state'
-const localStorageCodeVerifierKey = 'pkce_code_verifier'
+const localStorageStateKey = 'pkceState'
+const localStorageCodeVerifierKey = 'pkceCodeVerifier'
 
 export class LocalStorageSpotifyOAuth {
   private cryptographicallyRandomString (): string {
@@ -50,6 +50,11 @@ export class LocalStorageSpotifyOAuth {
 
   getLocalState (): string|null {
     return localStorage.getItem(localStorageStateKey)
+  }
+
+  clear (): void {
+    localStorage.removeItem(localStorageStateKey)
+    localStorage.removeItem(localStorageCodeVerifierKey)
   }
 
   async getToken (code: string): Promise<TokenResponse> {

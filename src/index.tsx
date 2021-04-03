@@ -22,6 +22,7 @@ if (code !== null && state !== null) {
     oauth.getToken(code).then(res => {
       const localSession = new LocalStorageSpotifySession()
       localSession.setFromTokenResponse(res)
+      oauth.clear()
       window.location.replace(`${window.location.pathname}`)
     }).catch(err => { throw err })
   }
