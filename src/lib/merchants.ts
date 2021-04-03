@@ -3,7 +3,7 @@ import { Merchant } from './models/merchant'
 export const merchants: Merchant[] = [
   {
     id: 'bandcamp',
-    text: 'bandcamp',
+    text: 'Bandcamp',
     search: 'bandcamp'
   },
   {
@@ -13,12 +13,12 @@ export const merchants: Merchant[] = [
   },
   {
     id: 'juno',
-    text: 'juno',
+    text: 'Juno',
     search: 'juno'
   },
   {
     id: 'traxsource',
-    text: 'traxsource',
+    text: 'Traxsource',
     search: 'traxsource'
   },
   {
@@ -28,7 +28,7 @@ export const merchants: Merchant[] = [
   },
   {
     id: 'boomkat',
-    text: 'boomkat',
+    text: 'Boomkat',
     search: 'boomkat'
   }
 ]
