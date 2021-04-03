@@ -1,6 +1,7 @@
 import { Album } from './models/album'
 import { DroppedSpotifyItem } from './models/spotify-drop'
 import { SpotifyResolver } from './spotify-resolver'
+import { Track } from './models/track';
 
 export const albumsIdsToAlbums = async (
   spotify: SpotifyResolver,
@@ -12,7 +13,7 @@ export const albumsIdsToAlbums = async (
 export const trackIdsToTracks = async (
   spotify: SpotifyResolver,
   trackIds: string[]
-): Promise<SpotifyApi.TrackObjectFull[]> => {
+): Promise<Track[]> => {
   return await spotify.tracksToTracks(trackIds)
 }
 

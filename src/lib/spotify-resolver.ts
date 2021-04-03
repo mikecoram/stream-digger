@@ -1,5 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-js'
 import { Album } from './models/album'
+import { Track } from './models/track';
 
 export class SpotifyResolver {
   api: SpotifyWebApi.SpotifyWebApiJs
@@ -28,15 +29,28 @@ export class SpotifyResolver {
 
   async tracksToTracks (
     trackIds: string[]
-  ): Promise<SpotifyApi.TrackObjectFull[]> {
-    const tracks: SpotifyApi.TrackObjectFull[] = []
+  ): Promise<Track[]> {
+    const tracks: Track[] = []
 
     if (trackIds.length > 0) {
       let i = 0; let trackIdsChunk
 
       while ((trackIdsChunk = trackIds.slice(i, i + 50)).length > 0) {
-        const res = await this.api.getTracks(trackIdsChunk)
-        tracks.push(...res.tracks)
+        const [trackRes, audioRes] = await Promise.all([
+          this.api.getTracks(trackIdsChunk),
+          this.api.getAudioFeaturesForTracks(trackIdsChunk)
+        ])
+
+        tracks.push(...(trackRes.tracks as Track[]).map(t => {
+          const af = audioRes.audio_features.find(a => a.id === t.id)
+
+          if (af === undefined) {
+            throw new Error('audio feature not found')
+          }
+
+          t.audioFeatures = af
+          return t
+        }))
         i += 50
       }
     }

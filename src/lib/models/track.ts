@@ -1,1 +1,3 @@
-export interface Track extends SpotifyApi.TrackObjectFull {}
+export interface Track extends SpotifyApi.TrackObjectFull {
+  audioFeatures: SpotifyApi.AudioFeaturesObject
+}
