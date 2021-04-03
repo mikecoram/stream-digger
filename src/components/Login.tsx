@@ -15,7 +15,7 @@ export class Login extends React.Component {
       <a
         id='login-with-spotify'
         className='loginWithSpotify'
-        href='#'
+        href='#0'
         onClick={async () => await this.handleClick()}
       >
         Login with Spotify
