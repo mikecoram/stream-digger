@@ -5,7 +5,7 @@ import { droppedItemsToAlbumIds, albumsIdsToAlbums } from '../lib/spotify-resolv
 import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
-import { LocalStorageSpotifyAuth } from '../lib/local-storage-spotify-auth'
+import { LocalStorageSpotifySession } from '../lib/local-storage-spotify-session'
 import { Login } from './Login'
 import { merchants } from '../lib/merchants'
 import { SpotifyResolver } from '../lib/spotify-resolver'
@@ -20,7 +20,7 @@ import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
 
-const spotifyAuth = new LocalStorageSpotifyAuth()
+const spotifySession = new LocalStorageSpotifySession()
 const storedItems = new LocalStorageDroppedSpotifyItems()
 const localAlbums = new LocalStorageAlbums()
 
@@ -34,7 +34,7 @@ interface State {
 class App extends React.Component<{}, State> {
   constructor (props: {}) {
     super(props)
-    const session = spotifyAuth.getSession()
+    const session = spotifySession.get()
 
     this.state = {
       albums: [],
@@ -50,7 +50,7 @@ class App extends React.Component<{}, State> {
     window.addEventListener('dragenter', this.handleWindowDragStart.bind(this))
     window.addEventListener('dragleave', this.handleWindowDragEnd.bind(this))
 
-    const session = spotifyAuth.getSession()
+    const session = spotifySession.get()
 
     if (session !== undefined && !session.isExpired) {
       this.resolveAlbums(session)
@@ -68,7 +68,7 @@ class App extends React.Component<{}, State> {
   handleWindowDrop (e: DragEvent): void {
     e.preventDefault()
     this.setState({ isDragging: false })
-    const session = spotifyAuth.getSession()
+    const session = spotifySession.get()
 
     if (session === undefined || session.isExpired) {
       return this.setState({ isLoggedIn: false })
@@ -112,7 +112,7 @@ class App extends React.Component<{}, State> {
 
   handleOnLogout (): void {
     if (window.confirm('Are you sure you want to logout?')) {
-      spotifyAuth.clearSession()
+      spotifySession.clear()
       this.setState({ albums: [], isLoggedIn: false })
     }
   }

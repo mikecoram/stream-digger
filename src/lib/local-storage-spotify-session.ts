@@ -1,9 +1,10 @@
-import { SpotifySession, SpotifyAuthSetResult } from './models/spotify-session'
+import { SpotifySession } from './models/spotify-session'
+import { TokenResponse } from './models/oauth-token-response'
 
 const key = 'spotifySession'
 
-export class LocalStorageSpotifyAuth {
-  getSession (): SpotifySession | undefined {
+export class LocalStorageSpotifySession {
+  get (): SpotifySession | undefined {
     const item = localStorage.getItem(key)
 
     if (item === null) {
@@ -15,7 +16,7 @@ export class LocalStorageSpotifyAuth {
     return data
   }
 
-  setSessionFromTokenResponse(res: any): void {
+  setFromTokenResponse (res: TokenResponse): void {
     localStorage.setItem(key, JSON.stringify({
       accessToken: res.access_token,
       tokenType: res.token_type,
@@ -27,7 +28,7 @@ export class LocalStorageSpotifyAuth {
     }))
   }
 
-  clearSession (): void {
+  clear (): void {
     localStorage.removeItem(key)
   }
 }

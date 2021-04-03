@@ -1,6 +1,6 @@
-export type DroppedSpotifyItemType = 'track'|'album'|'artist'|'playlist'
+import { SpotifyItemType } from './spotify-item-type'
 
 export interface DroppedSpotifyItem {
   id: string
-  type: DroppedSpotifyItemType
+  type: SpotifyItemType
 }

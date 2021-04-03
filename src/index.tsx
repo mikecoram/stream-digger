@@ -2,27 +2,28 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './components/App'
-import { LocalStorageSpotifyAuth } from './lib/local-storage-spotify-auth'
-import { getToken } from './lib/spotify-auth'
+import { LocalStorageSpotifySession } from './lib/local-storage-spotify-session'
+import { LocalStorageSpotifyOAuth } from './lib/local-storage-spotify-oauth'
 
 const urlParams = new URLSearchParams(window.location.search)
 const state = urlParams.get('state')
 const code = urlParams.get('code')
-const isSpotifyAuthCallback = code !== null && state !== null
 
-if (isSpotifyAuthCallback) {
+if (code !== null && state !== null) {
   const error = urlParams.get('error')
 
-  if (error) {
-    throw error
+  if (error !== null) {
+    throw new Error(error)
   }
 
-  if (state === localStorage.getItem("pkce_state")) {
-    getToken(code ?? '').then(res => {
-      const spotifyAuth = new LocalStorageSpotifyAuth()
-      spotifyAuth.setSessionFromTokenResponse(res)
+  const oauth = new LocalStorageSpotifyOAuth()
+
+  if (state === oauth.getLocalState()) {
+    oauth.getToken(code).then(res => {
+      const session = new LocalStorageSpotifySession()
+      session.setFromTokenResponse(res)
       window.location.replace(`${window.location.pathname}`)
-    })
+    }).catch(err => { throw err })
   }
 } else {
   ReactDOM.render(

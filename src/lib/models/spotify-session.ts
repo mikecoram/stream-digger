@@ -5,8 +5,3 @@ export interface SpotifySession {
   tokenType: string
   isExpired: boolean
 }
-
-export interface SpotifyAuthSetResult {
-  success: boolean
-  error?: string
-}
