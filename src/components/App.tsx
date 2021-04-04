@@ -189,7 +189,7 @@ class App extends React.Component<{}, State> {
 
           <div className='content'>
             {!isLoggedIn && <Login />}
-            {isLoggedIn && !isDragging && albums.length === 0 && <DragPrompt />}
+            {isLoggedIn && !isDragging && !isLoading && albums.length === 0 && <DragPrompt />}
             {
               isLoggedIn && albums.length > 0 &&
                 <ReleasesTable
