@@ -2,7 +2,7 @@ import React from 'react'
 import './ReleasesTable.css'
 import { Merchant } from '../../lib/models/merchant'
 import { Album } from '../../lib/models/album'
-import { getKey } from '../../lib/music';
+import { getKey } from '../../lib/music'
 
 interface Props {
   album: Album
