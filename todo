@@ -1,10 +1,9 @@
-display track key, duration, loudness
 address performance of drag when lots of tracks present (limit to 10 per page?)
 'clear bought' button
 homepage with intro text and gif
-pagination
-filtering?
-remove row button
+pagination / filtering?
+import limit?
+add 'remove row' button
 add gif to readme
 improve readme
 terms and conditions?

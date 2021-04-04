@@ -1,5 +1,5 @@
 const keys = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
-const modes = ['minor', 'major']
+const modes = ['min', 'maj']
 
 export const getKey = (
   pitchClassKey: number,
