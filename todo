@@ -1,9 +1,9 @@
+limit track no input and playlist length import (250 songs?)
+pagination / filtering?
 ordering? order by last added as default, allow sort by Artist / Release name?
 Refactor Spotify resolver stuff
 'clear bought' button
 homepage with intro text and gif
-pagination / filtering?
-import limit?
 add 'remove row' button
 add gif to readme
 improve readme
