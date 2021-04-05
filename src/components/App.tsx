@@ -11,7 +11,7 @@ import { LocalStorageTracks } from '../lib/local-storage-tracks'
 import { Login } from './Login'
 import { merchants } from '../lib/merchants'
 import { SpotifyResolver } from '../lib/spotify-resolver'
-import { SpotifySession } from '../lib/models/spotify-session'
+import { Track } from '../lib/models/track'
 import ClearAllBtn from './ClearAllBtn'
 import DraggingOverlay from './DraggingOverlay'
 import DragPrompt from './DragPrompt'
@@ -21,7 +21,6 @@ import LoadingOverlay from './LoadingOverlay'
 import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
-import { Track } from '../lib/models/track'
 
 const localAlbums = new LocalStorageAlbums()
 const localSession = new LocalStorageSpotifySession()
@@ -83,9 +82,13 @@ class App extends React.Component<{}, State> {
       return
     }
 
-    this.setState({ isDragging: false, isLoading: true })
     this.getDroppedSpotifyURIs(e.dataTransfer)
       .then(URIs => {
+        if (URIs.length === 0) {
+          return this.setState({ isDragging: false })
+        }
+
+        this.setState({ isDragging: false, isLoading: true })
         storedItems.append(getItemsFromDroppedURIs(URIs))
         this.hydrateLocalSpotifyObjects()
           .then(() => this.setState({
@@ -100,12 +103,18 @@ class App extends React.Component<{}, State> {
 
   handleWindowDragStart (e: DragEvent): void {
     e.preventDefault()
-    this.setState({ isDragging: true })
+
+    if (!this.state.isDragging) {
+      this.setState({ isDragging: true })
+    }
   }
 
   handleWindowDragEnd (e: DragEvent): void {
     e.preventDefault()
-    this.setState({ isDragging: false })
+
+    if (this.state.isDragging) {
+      this.setState({ isDragging: false })
+    }
   }
 
   handleClearItems (): void {
@@ -191,7 +200,6 @@ class App extends React.Component<{}, State> {
 
   handleImportedTracksMoreInfo (tracks: Track[]): void {
     this.setState({ isLoading: true })
-
     this.hydrateTracksWithAudioFeatures(tracks)
       .then(() => this.setState({
         importedTracks: localTracks.get(),
