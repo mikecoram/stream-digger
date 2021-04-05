@@ -4,19 +4,21 @@ import { Merchant } from '../../lib/models/merchant'
 import { Album } from '../../lib/models/album'
 import { getKey } from '../../lib/music'
 import { millisToMinutesAndSeconds } from '../../lib/time'
+import { Track } from '../../lib/models/track'
 
 interface Props {
   album: Album
+  tracks: Track[]
   merchants: Merchant[]
   onChangeAlbum: (album: Album) => void
+  onClickImportedTracksMoreInfo: (tracks: Track[]) => void
 }
 
 class ReleasesTableRow extends React.Component<Props> {
   render (): JSX.Element {
-    const { album, merchants } = this.props
+    const { album, merchants, tracks } = this.props
     const artists = album.artists.map(a => a.name).join(', ')
     const smallImage = album.images.find(i => i.height === 64)
-    const { importedTracks } = album
 
     return (
       <tr className='releasesTable__row'>
@@ -45,20 +47,29 @@ class ReleasesTableRow extends React.Component<Props> {
         <td className='releasesTable__column'>
           <div className='releasesTable__albumTracksList'>
             {
-              importedTracks.map(t =>
+              tracks.map(t =>
                 <div key={t.id}>
-                  {t.name + ' '}
-                  <span>
-                    (
-                    {`${Math.round(t.audioFeatures.tempo)} bpm, `}
-                    {`${getKey(t.audioFeatures.key, t.audioFeatures.mode)}, `}
-                    {millisToMinutesAndSeconds(t.duration_ms)}
-                    )
-                  </span>
+                  <span className='releasesTable__trackName'>{t.name + ' '}</span>
+                  {
+                    t.audioFeatures !== undefined &&
+                      <span>
+                        {`${Math.round(t.audioFeatures.tempo)} bpm, `}
+                        {`${getKey(t.audioFeatures.key, t.audioFeatures.mode)}, `}
+                        {millisToMinutesAndSeconds(t.duration_ms)}
+                      </span>
+                  }
                 </div>
               )
             }
           </div>
+          {
+            tracks.some(t => t.audioFeatures === undefined) &&
+              <button
+                onClick={() => this.props.onClickImportedTracksMoreInfo(tracks)}
+              >
+                more info
+              </button>
+          }
         </td>
         <td className='releasesTable__column releasesTable__merchantsColumn'>
           {

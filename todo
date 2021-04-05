@@ -1,4 +1,6 @@
-address performance of drag when lots of tracks present (limit to 10 per page?)
+ordering? order by last added as default, allow sort by Artist / Release name?
+Refactor Spotify resolver stuff
+address performance of drag when lots of tracks present (limit to 10 per page?) JSON parsing issue?
 'clear bought' button
 homepage with intro text and gif
 pagination / filtering?

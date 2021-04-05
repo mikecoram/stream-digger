@@ -36,21 +36,8 @@ export class SpotifyResolver {
       let i = 0; let trackIdsChunk
 
       while ((trackIdsChunk = trackIds.slice(i, i + 50)).length > 0) {
-        const [trackRes, audioRes] = await Promise.all([
-          this.api.getTracks(trackIdsChunk),
-          this.api.getAudioFeaturesForTracks(trackIdsChunk)
-        ])
-
-        tracks.push(...(trackRes.tracks as Track[]).map(t => {
-          const af = audioRes.audio_features.find(a => a.id === t.id)
-
-          if (af === undefined) {
-            throw new Error('audio feature not found')
-          }
-
-          t.audioFeatures = af
-          return t
-        }))
+        const res = await this.api.getTracks(trackIdsChunk)
+        tracks.push(...(res.tracks as Track[]))
         i += 50
       }
     }

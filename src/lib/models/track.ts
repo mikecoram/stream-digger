@@ -1,3 +1,3 @@
 export interface Track extends SpotifyApi.TrackObjectFull {
-  audioFeatures: SpotifyApi.AudioFeaturesObject
+  audioFeatures?: SpotifyApi.AudioFeaturesObject
 }

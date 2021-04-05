@@ -3,23 +3,28 @@ import './ReleasesTable.css'
 import { Merchant } from '../../lib/models/merchant'
 import ReleasesTableRow from './ReleasesTableRow'
 import { Album } from '../../lib/models/album'
+import { Track } from '../../lib/models/track'
 
 interface Props {
   albums: Album[]
+  importedTracks: Track[]
   merchants: Merchant[]
   onChangeAlbum: (album: Album) => void
+  onClickImportedTracksMoreInfo: (tracks: Track[]) => void
 }
 
 class ReleasesTable extends React.Component<Props> {
   render (): JSX.Element {
-    const { albums, merchants } = this.props
+    const { albums, importedTracks, merchants } = this.props
 
     const rows = albums.map(a =>
       <ReleasesTableRow
         key={a.id}
         album={a}
+        tracks={importedTracks.filter(t => t.album.id === a.id)}
         merchants={merchants}
         onChangeAlbum={this.props.onChangeAlbum}
+        onClickImportedTracksMoreInfo={this.props.onClickImportedTracksMoreInfo}
       />
     )
 

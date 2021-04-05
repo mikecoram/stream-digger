@@ -12,9 +12,13 @@ export class LocalStorageTracks {
     localStorage.setItem(key, JSON.stringify(tracks))
   }
 
-  setOne (track: Track): void {
+  update (updateTracks: Track[]): void {
     const tracks = this.get()
-    Object.assign(tracks.find(a => a.id === track.id), track)
+
+    for (const t of updateTracks) {
+      Object.assign(tracks.find(a => a.id === t.id), t)
+    }
+
     this.set(tracks)
   }
 
