@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { getDropsFromURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
+import { getDropsFromURIs, onlySpotifyURIs } from '../lib/spotify-uris'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDrops } from '../lib/local-storage-drops'
 import { LocalStorageOAuthSession } from '../lib/local-storage-oauth-session'
@@ -19,6 +19,7 @@ import Header from './Header'
 import LoadingOverlay from './LoadingOverlay'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
+import { getPlainTextURIsFromDropEventData } from '../lib/drag-event-data'
 
 interface State {
   albums: Album[]
