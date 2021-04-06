@@ -220,21 +220,39 @@ class App extends React.Component<{}, State> {
 
     return (
       <>
-        {isLoading && <LoadingOverlay />}
-        {isLoggedIn && isDragging && <DraggingOverlay />}
+        {
+          isLoading &&
+            <LoadingOverlay />
+        }
+        {
+          isLoggedIn && isDragging &&
+            <DraggingOverlay />
+        }
 
         <div className='app'>
           <Header buttons={
             <div className='buttonContainer'>
-              {isLoggedIn && albums.length > 0 && <ClearAllBtn onClearItems={() => this.handleClearItems()} />}
-              {isLoggedIn && <LogoutBtn onLogout={() => this.handleLogout()} />}
+              {
+                isLoggedIn && albums.length > 0 &&
+                  <ClearAllBtn onClearItems={() => this.handleClearItems()} />
+              }
+              {
+                isLoggedIn &&
+                  <LogoutBtn onLogout={() => this.handleLogout()} />
+              }
             </div>
           }
           />
 
           <div className='content'>
-            {!isLoggedIn && <Login />}
-            {isLoggedIn && !isDragging && !isLoading && albums.length === 0 && <DragPrompt />}
+            {
+              !isLoggedIn &&
+                <Login />
+            }
+            {
+              isLoggedIn && !isDragging && !isLoading && albums.length === 0 &&
+                <DragPrompt />
+            }
             {
               isLoggedIn && albums.length > 0 &&
                 <ReleasesTable
