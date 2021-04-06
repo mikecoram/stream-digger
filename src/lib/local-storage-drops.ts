@@ -8,6 +8,10 @@ export class LocalStorageDrops {
     return JSON.parse(lsEntry) as SpotifyDrop[]
   }
 
+  set (drops: SpotifyDrop[]): void {
+    localStorage.setItem(key, JSON.stringify(drops))
+  }
+
   append (drops: SpotifyDrop[]): void {
     const storedAndNewDrops = this.get().concat(drops)
     const dedupedDrops: SpotifyDrop[] = []

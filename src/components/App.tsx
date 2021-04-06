@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { dropsToAlbumIds, albumsIdsToAlbums, dropsToTrackIds, trackIdsToTracks } from '../lib/spotify-resolve-drops'
+import { SpotifyDropResolver } from '../lib/spotify-resolve-drops'
 import { getDropsFromURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDrops } from '../lib/local-storage-drops'
@@ -22,11 +22,6 @@ import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
 
-const localAlbums = new LocalStorageAlbums()
-const localSession = new LocalStorageSpotifySession()
-const localTracks = new LocalStorageTracks()
-const localDrops = new LocalStorageDrops()
-
 interface State {
   albums: Album[]
   importedTracks: Track[]
@@ -36,6 +31,11 @@ interface State {
 }
 
 class App extends React.Component<{}, State> {
+  localSession = new LocalStorageSpotifySession()
+  localDrops = new LocalStorageDrops()
+  localAlbums = new LocalStorageAlbums()
+  localTracks = new LocalStorageTracks()
+
   constructor (props: {}) {
     super(props)
 
@@ -44,7 +44,7 @@ class App extends React.Component<{}, State> {
       importedTracks: [],
       isDragging: false,
       isLoading: false,
-      isLoggedIn: localSession.get() !== undefined
+      isLoggedIn: this.localSession.get() !== undefined
     }
   }
 
@@ -58,8 +58,8 @@ class App extends React.Component<{}, State> {
       this.setState({ isLoading: true })
       this.hydrateLocalSpotifyObjects()
         .then(() => this.setState({
-          albums: localAlbums.get(),
-          importedTracks: localTracks.get(),
+          albums: this.localAlbums.get(),
+          importedTracks: this.localTracks.get(),
           isLoading: false
         }))
         .catch(err => { throw err })
@@ -89,11 +89,11 @@ class App extends React.Component<{}, State> {
         }
 
         this.setState({ isDragging: false, isLoading: true })
-        localDrops.append(getDropsFromURIs(URIs))
+        this.localDrops.append(getDropsFromURIs(URIs))
         this.hydrateLocalSpotifyObjects()
           .then(() => this.setState({
-            albums: localAlbums.get(),
-            importedTracks: localTracks.get(),
+            albums: this.localAlbums.get(),
+            importedTracks: this.localTracks.get(),
             isLoading: false
           }))
           .catch(err => { throw err })
@@ -119,27 +119,27 @@ class App extends React.Component<{}, State> {
 
   handleClearItems (): void {
     if (window.confirm('Are you sure you want to clear all items?')) {
-      localDrops.clear()
-      localTracks.clear()
-      localAlbums.clear()
+      this.localDrops.clear()
+      this.localTracks.clear()
+      this.localAlbums.clear()
       this.setState({ albums: [] })
     }
   }
 
   handleLogout (): void {
     if (window.confirm('Are you sure you want to logout?')) {
-      localSession.clear()
+      this.localSession.clear()
       this.setState({ albums: [], isLoggedIn: false })
     }
   }
 
   handleChangeAlbum (album: Album): void {
-    localAlbums.setOne(album)
-    this.setState({ albums: localAlbums.get() })
+    this.localAlbums.setOne(album)
+    this.setState({ albums: this.localAlbums.get() })
   }
 
   async getRefreshedToken (): Promise<string> {
-    const session = localSession.get()
+    const session = this.localSession.get()
 
     if (session === undefined) {
       throw new Error('no local session')
@@ -152,8 +152,8 @@ class App extends React.Component<{}, State> {
     const oauth = new LocalStorageSpotifyOAuth()
     const res = await oauth.refreshToken(session.refreshToken)
     oauth.clear()
-    localSession.setFromTokenResponse(res)
-    const refreshedSession = localSession.get()
+    this.localSession.setFromTokenResponse(res)
+    const refreshedSession = this.localSession.get()
 
     if (refreshedSession === undefined) {
       throw new Error('no local session after refresh')
@@ -167,40 +167,42 @@ class App extends React.Component<{}, State> {
   }
 
   async hydrateLocalSpotifyObjects (): Promise<void> {
-    const api = new SpotifyWebApi()
-    api.setAccessToken(await this.getRefreshedToken())
-    const spotify = new SpotifyResolver(api)
-    const drops = localDrops.get()
+    const spotify = new SpotifyWebApi()
+    spotify.setAccessToken(await this.getRefreshedToken())
+    const spotifyResolver = new SpotifyResolver(spotify)
+    const unresolvedDrops = this.localDrops.get().filter(d => !d.resolved)
+    const dropResolver = new SpotifyDropResolver(spotifyResolver)
 
     const [albumIds, trackIds] = await Promise.all([
-      dropsToAlbumIds(spotify, drops),
-      dropsToTrackIds(spotify, drops)
+      dropResolver.dropsToAlbumIds(unresolvedDrops),
+      dropResolver.dropsToTrackIds(unresolvedDrops)
     ])
+
+    this.localDrops.set(unresolvedDrops.map(d => {
+      d.resolved = true
+      return d
+    }))
 
     const [albums, tracks] = await Promise.all([
-      albumsIdsToAlbums(spotify, localAlbums.idDifference(albumIds)),
-      trackIdsToTracks(spotify, localTracks.idDifference(trackIds))
+      spotifyResolver.albumsToAlbums(this.localAlbums.idDifference(albumIds)),
+      spotifyResolver.tracksToTracks(this.localTracks.idDifference(trackIds))
     ])
 
-    localTracks.append(tracks)
-    localAlbums.append(albums)
-
-    const newAlbums = localAlbums.get().map(a => {
+    this.localTracks.append(tracks)
+    this.localAlbums.append(albums.map(a => {
       a.bought = false
       return a
-    })
-
-    localAlbums.set(newAlbums)
+    }))
   }
 
   async hydrateTracksWithAudioFeatures (tracks: Track[]): Promise<void> {
     const api = new SpotifyWebApi()
     api.setAccessToken(await this.getRefreshedToken())
     const trackIds = tracks.map(t => t.id)
-    const tracksToUpdate = localTracks.get().filter(t => trackIds.includes(t.id))
+    const tracksToUpdate = this.localTracks.get().filter(t => trackIds.includes(t.id))
     const res = await api.getAudioFeaturesForTracks(trackIds)
 
-    localTracks.update(tracksToUpdate.map(t => {
+    this.localTracks.update(tracksToUpdate.map(t => {
       t.audioFeatures = res.audio_features.find(a => a.id === t.id)
       return t
     }))
@@ -210,7 +212,7 @@ class App extends React.Component<{}, State> {
     this.setState({ isLoading: true })
     this.hydrateTracksWithAudioFeatures(tracks)
       .then(() => this.setState({
-        importedTracks: localTracks.get(),
+        importedTracks: this.localTracks.get(),
         isLoading: false
       }))
       .catch(err => { throw err })

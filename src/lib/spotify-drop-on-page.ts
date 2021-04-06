@@ -35,7 +35,8 @@ export const getDropsFromURIs = (spotifyURIs: string[]): SpotifyDrop[] => {
     if (u.includes('playlist')) {
       return {
         id: u.split('playlist/')[1],
-        type: 'playlist' as SpotifyItemType
+        type: 'playlist' as SpotifyItemType,
+        resolved: false
       }
     }
 
@@ -43,7 +44,8 @@ export const getDropsFromURIs = (spotifyURIs: string[]): SpotifyDrop[] => {
 
     return {
       id,
-      type: type as SpotifyItemType
+      type: type as SpotifyItemType,
+      resolved: false
     }
   })
 }
