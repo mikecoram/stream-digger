@@ -1,4 +1,4 @@
-import { DroppedSpotifyItem } from './models/spotify-drop'
+import { SpotifyDrop } from './models/spotify-drop'
 import { SpotifyItemType } from './models/spotify-item-type'
 
 const getURIsFromDataTransferItem = async (i: DataTransferItem): Promise<string[]> =>
@@ -30,7 +30,7 @@ export const onlySpotifyURIs = (URIs: string[]): string[] =>
     /https:\/\/open\.spotify\.com\/user\/.*\/playlist\/.*/.test(u)
   )
 
-export const getItemsFromDroppedURIs = (spotifyURIs: string[]): DroppedSpotifyItem[] => {
+export const getDropsFromURIs = (spotifyURIs: string[]): SpotifyDrop[] => {
   return spotifyURIs.map((u: string) => {
     if (u.includes('playlist')) {
       return {

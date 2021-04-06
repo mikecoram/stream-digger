@@ -1,6 +1,6 @@
 import { SpotifyItemType } from './spotify-item-type'
 
-export interface DroppedSpotifyItem {
+export interface SpotifyDrop {
   id: string
   type: SpotifyItemType
 }

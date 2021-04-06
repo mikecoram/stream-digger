@@ -1,10 +1,10 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { droppedItemsToAlbumIds, albumsIdsToAlbums, droppedItemsToTrackIds, trackIdsToTracks } from '../lib/spotify-resolve-dropped-items'
-import { getItemsFromDroppedURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
+import { dropsToAlbumIds, albumsIdsToAlbums, dropsToTrackIds, trackIdsToTracks } from '../lib/spotify-resolve-drops'
+import { getDropsFromURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
-import { LocalStorageDroppedSpotifyItems } from '../lib/local-storage-dropped-spotify-items'
+import { LocalStorageDrops } from '../lib/local-storage-drops'
 import { LocalStorageSpotifyOAuth } from '../lib/local-storage-spotify-oauth'
 import { LocalStorageSpotifySession } from '../lib/local-storage-spotify-session'
 import { LocalStorageTracks } from '../lib/local-storage-tracks'
@@ -25,7 +25,7 @@ import SpotifyWebApi from 'spotify-web-api-js'
 const localAlbums = new LocalStorageAlbums()
 const localSession = new LocalStorageSpotifySession()
 const localTracks = new LocalStorageTracks()
-const localItems = new LocalStorageDroppedSpotifyItems()
+const localDrops = new LocalStorageDrops()
 
 interface State {
   albums: Album[]
@@ -89,7 +89,7 @@ class App extends React.Component<{}, State> {
         }
 
         this.setState({ isDragging: false, isLoading: true })
-        localItems.append(getItemsFromDroppedURIs(URIs))
+        localDrops.append(getDropsFromURIs(URIs))
         this.hydrateLocalSpotifyObjects()
           .then(() => this.setState({
             albums: localAlbums.get(),
@@ -119,7 +119,7 @@ class App extends React.Component<{}, State> {
 
   handleClearItems (): void {
     if (window.confirm('Are you sure you want to clear all items?')) {
-      localItems.clear()
+      localDrops.clear()
       localTracks.clear()
       localAlbums.clear()
       this.setState({ albums: [] })
@@ -170,11 +170,11 @@ class App extends React.Component<{}, State> {
     const api = new SpotifyWebApi()
     api.setAccessToken(await this.getRefreshedToken())
     const spotify = new SpotifyResolver(api)
-    const items = localItems.get()
+    const drops = localDrops.get()
 
     const [albumIds, trackIds] = await Promise.all([
-      droppedItemsToAlbumIds(spotify, items),
-      droppedItemsToTrackIds(spotify, items)
+      dropsToAlbumIds(spotify, drops),
+      dropsToTrackIds(spotify, drops)
     ])
 
     const [albums, tracks] = await Promise.all([
