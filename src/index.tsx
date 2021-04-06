@@ -19,12 +19,14 @@ if (code !== null && state !== null) {
   const oauth = new LocalStorageSpotifyOAuth()
 
   if (state === oauth.getLocalState()) {
-    oauth.getToken(code).then(res => {
-      const localSession = new LocalStorageSpotifySession()
-      localSession.setFromTokenResponse(res)
-      oauth.clear()
-      window.location.replace(`${window.location.pathname}`)
-    }).catch(err => { throw err })
+    oauth.getToken(code)
+      .then(res => {
+        const localSession = new LocalStorageSpotifySession()
+        localSession.setFromTokenResponse(res)
+        oauth.clear()
+        window.location.replace(`${window.location.pathname}`)
+      })
+      .catch(err => { throw err })
   }
 } else {
   ReactDOM.render(
