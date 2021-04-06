@@ -1,24 +1,22 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { SpotifyDropResolver } from '../lib/spotify-drop-resolver'
 import { getDropsFromURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDrops } from '../lib/local-storage-drops'
-import { LocalStorageSpotifyOAuth } from '../lib/local-storage-spotify-oauth'
 import { LocalStorageOAuthSession } from '../lib/local-storage-oauth-session'
+import { LocalStorageSpotifyOAuth } from '../lib/local-storage-spotify-oauth'
 import { LocalStorageTracks } from '../lib/local-storage-tracks'
 import { Login } from './Login'
 import { merchants } from '../lib/merchants'
+import { SpotifyDropResolver } from '../lib/spotify-drop-resolver'
 import { SpotifyResolver } from '../lib/spotify-resolver'
 import { Track } from '../lib/models/track'
-import ClearAllBtn from './ClearAllBtn'
 import DraggingOverlay from './DraggingOverlay'
 import DragPrompt from './DragPrompt'
 import Footer from './Footer'
 import Header from './Header'
 import LoadingOverlay from './LoadingOverlay'
-import LogoutBtn from './LogoutBtn'
 import ReleasesTable from './releases-table/ReleasesTable'
 import SpotifyWebApi from 'spotify-web-api-js'
 
@@ -227,11 +225,11 @@ class App extends React.Component<{}, State> {
             <div className='buttonContainer'>
               {
                 isLoggedIn && albums.length > 0 &&
-                  <ClearAllBtn onClearItems={() => this.handleClearItems()} />
+                  <button onClick={() => this.handleClearItems()}>Clear All</button>
               }
               {
                 isLoggedIn &&
-                  <LogoutBtn onLogout={() => this.handleLogout()} />
+                  <button onClick={() => this.handleLogout()}>Logout</button>
               }
             </div>
           }
