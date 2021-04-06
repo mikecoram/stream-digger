@@ -25,7 +25,7 @@ import SpotifyWebApi from 'spotify-web-api-js'
 const localAlbums = new LocalStorageAlbums()
 const localSession = new LocalStorageSpotifySession()
 const localTracks = new LocalStorageTracks()
-const storedItems = new LocalStorageDroppedSpotifyItems()
+const localItems = new LocalStorageDroppedSpotifyItems()
 
 interface State {
   albums: Album[]
@@ -89,7 +89,7 @@ class App extends React.Component<{}, State> {
         }
 
         this.setState({ isDragging: false, isLoading: true })
-        storedItems.append(getItemsFromDroppedURIs(URIs))
+        localItems.append(getItemsFromDroppedURIs(URIs))
         this.hydrateLocalSpotifyObjects()
           .then(() => this.setState({
             albums: localAlbums.get(),
@@ -119,7 +119,7 @@ class App extends React.Component<{}, State> {
 
   handleClearItems (): void {
     if (window.confirm('Are you sure you want to clear all items?')) {
-      storedItems.clear()
+      localItems.clear()
       localTracks.clear()
       localAlbums.clear()
       this.setState({ albums: [] })
@@ -149,10 +149,10 @@ class App extends React.Component<{}, State> {
       return session.accessToken
     }
 
-      const oauth = new LocalStorageSpotifyOAuth()
-      const res = await oauth.refreshToken(session.refreshToken)
-      oauth.clear()
-      localSession.setFromTokenResponse(res)
+    const oauth = new LocalStorageSpotifyOAuth()
+    const res = await oauth.refreshToken(session.refreshToken)
+    oauth.clear()
+    localSession.setFromTokenResponse(res)
     const refreshedSession = localSession.get()
 
     if (refreshedSession === undefined) {
@@ -170,10 +170,11 @@ class App extends React.Component<{}, State> {
     const api = new SpotifyWebApi()
     api.setAccessToken(await this.getRefreshedToken())
     const spotify = new SpotifyResolver(api)
+    const items = localItems.get()
 
     const [albumIds, trackIds] = await Promise.all([
-      droppedItemsToAlbumIds(spotify, storedItems.get()),
-      droppedItemsToTrackIds(spotify, storedItems.get())
+      droppedItemsToAlbumIds(spotify, items),
+      droppedItemsToTrackIds(spotify, items)
     ])
 
     const [albums, tracks] = await Promise.all([
