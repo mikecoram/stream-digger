@@ -1,17 +1,21 @@
-import { SpotifySession } from './models/spotify-session'
+import { OAuthSession } from './models/oauth-session'
 import { TokenResponse } from './models/oauth-token-response'
 
 const key = 'spotifySession'
 
-export class LocalStorageSpotifySession {
-  get (): SpotifySession | undefined {
+export class LocalStorageOAuthSession {
+  exists (): boolean {
+    return localStorage.getItem(key) !== undefined
+  }
+
+  get (): OAuthSession {
     const item = localStorage.getItem(key)
 
     if (item === null) {
-      return undefined
+      throw new Error('tried to get non-existent session')
     }
 
-    const data = JSON.parse(item) as SpotifySession
+    const data = JSON.parse(item) as OAuthSession
     data.isExpired = new Date(data.expiryTime).getTime() < Date.now()
     return data
   }

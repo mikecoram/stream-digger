@@ -1,4 +1,4 @@
-export interface SpotifySession {
+export interface OAuthSession {
   accessToken: string
   refreshToken: string
   expiryTime: string

@@ -1,12 +1,12 @@
 import React from 'react'
 import './App.css'
 import { Album } from '../lib/models/album'
-import { SpotifyDropResolver } from '../lib/spotify-resolve-drops'
+import { SpotifyDropResolver } from '../lib/spotify-drop-resolver'
 import { getDropsFromURIs, getPlainTextURIsFromDropEventData, onlySpotifyURIs } from '../lib/spotify-drop-on-page'
 import { LocalStorageAlbums } from '../lib/local-storage-albums'
 import { LocalStorageDrops } from '../lib/local-storage-drops'
 import { LocalStorageSpotifyOAuth } from '../lib/local-storage-spotify-oauth'
-import { LocalStorageSpotifySession } from '../lib/local-storage-spotify-session'
+import { LocalStorageOAuthSession } from '../lib/local-storage-oauth-session'
 import { LocalStorageTracks } from '../lib/local-storage-tracks'
 import { Login } from './Login'
 import { merchants } from '../lib/merchants'
@@ -31,7 +31,7 @@ interface State {
 }
 
 class App extends React.Component<{}, State> {
-  localSession = new LocalStorageSpotifySession()
+  localSession = new LocalStorageOAuthSession()
   localDrops = new LocalStorageDrops()
   localAlbums = new LocalStorageAlbums()
   localTracks = new LocalStorageTracks()
@@ -44,7 +44,7 @@ class App extends React.Component<{}, State> {
       importedTracks: [],
       isDragging: false,
       isLoading: false,
-      isLoggedIn: this.localSession.get() !== undefined
+      isLoggedIn: this.localSession.exists()
     }
   }
 
@@ -141,10 +141,6 @@ class App extends React.Component<{}, State> {
   async getRefreshedToken (): Promise<string> {
     const session = this.localSession.get()
 
-    if (session === undefined) {
-      throw new Error('no local session')
-    }
-
     if (!session.isExpired) {
       return session.accessToken
     }
@@ -153,13 +149,7 @@ class App extends React.Component<{}, State> {
     const res = await oauth.refreshToken(session.refreshToken)
     oauth.clear()
     this.localSession.setFromTokenResponse(res)
-    const refreshedSession = this.localSession.get()
-
-    if (refreshedSession === undefined) {
-      throw new Error('no local session after refresh')
-    }
-
-    return refreshedSession.accessToken
+    return this.localSession.get().accessToken
   }
 
   async getDroppedSpotifyURIs (data: DataTransfer): Promise<string[]> {

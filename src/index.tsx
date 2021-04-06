@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './components/App'
-import { LocalStorageSpotifySession } from './lib/local-storage-spotify-session'
+import { LocalStorageOAuthSession } from './lib/local-storage-oauth-session'
 import { LocalStorageSpotifyOAuth } from './lib/local-storage-spotify-oauth'
 
 const urlParams = new URLSearchParams(window.location.search)
@@ -21,7 +21,7 @@ if (code !== null && state !== null) {
   if (state === oauth.getLocalState()) {
     oauth.getToken(code)
       .then(res => {
-        const localSession = new LocalStorageSpotifySession()
+        const localSession = new LocalStorageOAuthSession()
         localSession.setFromTokenResponse(res)
         oauth.clear()
         window.location.replace(`${window.location.pathname}`)
