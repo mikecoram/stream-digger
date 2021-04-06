@@ -145,14 +145,21 @@ class App extends React.Component<{}, State> {
       throw new Error('no local session')
     }
 
-    if (session.isExpired) {
+    if (!session.isExpired) {
+      return session.accessToken
+    }
+
       const oauth = new LocalStorageSpotifyOAuth()
       const res = await oauth.refreshToken(session.refreshToken)
       oauth.clear()
       localSession.setFromTokenResponse(res)
+    const refreshedSession = localSession.get()
+
+    if (refreshedSession === undefined) {
+      throw new Error('no local session after refresh')
     }
 
-    return session.accessToken
+    return refreshedSession.accessToken
   }
 
   async getDroppedSpotifyURIs (data: DataTransfer): Promise<string[]> {
