@@ -5,7 +5,7 @@ const key = 'spotifySession'
 
 export class LocalStorageOAuthSession {
   exists (): boolean {
-    return localStorage.getItem(key) !== undefined
+    return localStorage.getItem(key) !== null
   }
 
   get (): OAuthSession {
