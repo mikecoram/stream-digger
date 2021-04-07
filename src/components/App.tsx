@@ -55,7 +55,7 @@ class App extends React.Component<{}, State> {
 
     if (this.state.isLoggedIn) {
       this.setState({ isLoading: true })
-      this.hydrateLocalSpotifyObjects()
+      this.resolveAlbumsAndTracks()
         .then(() => this.setState({
           albums: this.localAlbums.get(),
           importedTracks: this.localTracks.get(),
@@ -89,7 +89,7 @@ class App extends React.Component<{}, State> {
 
         this.setState({ isDragging: false, isLoading: true })
         this.localDrops.append(getDropsFromURIs(URIs))
-        this.hydrateLocalSpotifyObjects()
+        this.resolveAlbumsAndTracks()
           .then(() => this.setState({
             albums: this.localAlbums.get(),
             importedTracks: this.localTracks.get(),
@@ -155,7 +155,7 @@ class App extends React.Component<{}, State> {
     return onlySpotifyURIs(await getPlainTextURIsFromDropEventData(data))
   }
 
-  async hydrateLocalSpotifyObjects (): Promise<void> {
+  async resolveAlbumsAndTracks (): Promise<void> {
     const spotify = new SpotifyWebApi()
     spotify.setAccessToken(await this.getRefreshedToken())
     const spotifyResolver = new SpotifyResolver(spotify)
@@ -184,7 +184,7 @@ class App extends React.Component<{}, State> {
     }))
   }
 
-  async hydrateTracksWithAudioFeatures (tracks: Track[]): Promise<void> {
+  async resolveAudioFeaturesForTracks (tracks: Track[]): Promise<void> {
     const api = new SpotifyWebApi()
     api.setAccessToken(await this.getRefreshedToken())
     const trackIds = tracks.map(t => t.id)
@@ -199,7 +199,7 @@ class App extends React.Component<{}, State> {
 
   handleImportedTracksMoreInfo (tracks: Track[]): void {
     this.setState({ isLoading: true })
-    this.hydrateTracksWithAudioFeatures(tracks)
+    this.resolveAudioFeaturesForTracks(tracks)
       .then(() => this.setState({
         importedTracks: this.localTracks.get(),
         isLoading: false
