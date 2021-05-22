@@ -1,22 +1,17 @@
+add via spotify share link pasted in
+mobile responsive-ness
+'staging' environment
+CI pipeline
+tests
+refactor to use functional react / hooks
 limit track input and playlist length import (200 songs?)
 pagination / filtering?
 ordering? order by last added as default, allow sort by Artist / Release name?
 'clear bought' button
-homepage with intro text and gif
 add 'remove row' button
-proper alerts / confirmations
 error handling
+
 add gif to readme
 improve readme
 gif demos
-homepage
-terms and conditions?
-  spotify api
-  cookies?
-host somewhere
-
-other spotify apps:
-  song preview? for a buzzcocks type quiz
-  how well do you know your own library, or a collaborative quiz - artist songs, popularity, year released etc with sockets and a backend
-  simple app where drag and drop displays the bpm, key and spotify tagging info like tunebat
-  upgraded mtTool
+homepage with intro text and gif

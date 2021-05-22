@@ -1,15 +1,59 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.27"
-    }
-  }
+resource "aws_s3_bucket" "site" {
+  bucket = var.site_domain
+  acl    = "public-read"
+  policy = ""
 
-  required_version = ">= 0.14.9"
+  website {
+    index_document = "index.html"
+    error_document = "index.html"
+  }
 }
 
-provider "aws" {
-  profile = "default"
-  region  = "us-west-2"
+resource "aws_s3_bucket_policy" "public_read" {
+  bucket = aws_s3_bucket.site.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:GetObject"
+        Resource = [
+          aws_s3_bucket.site.arn,
+          "${aws_s3_bucket.site.arn}/*",
+        ]
+      },
+    ]
+  })
+}
+
+resource "aws_s3_bucket" "www" {
+  bucket = "www.${var.site_domain}"
+  acl    = "private"
+  policy = ""
+
+  website {
+    redirect_all_requests_to = "https://${var.site_domain}"
+  }
+}
+
+module "cloudfront_site" {
+  source = "./s3-cloudfront"
+
+  alias       = var.site_domain
+  aws_region  = var.aws_region
+  cert_arn    = aws_acm_certificate.cert.arn
+  domain_name = aws_s3_bucket.site.bucket_regional_domain_name
+  origin_id   = "S3-${var.site_domain}"
+}
+
+module "cloudfront_www" {
+  source = "./s3-cloudfront"
+
+  alias       = "www.${var.site_domain}"
+  aws_region  = var.aws_region
+  cert_arn    = aws_acm_certificate.cert.arn
+  domain_name = aws_s3_bucket.www.bucket_regional_domain_name
+  origin_id   = "S3-www.${var.site_domain}"
 }
