@@ -43,7 +43,7 @@ module "cloudfront_site" {
 
   alias       = var.site_domain
   aws_region  = var.aws_region
-  cert_arn    = aws_acm_certificate.cert.arn
+  cert_arn    = var.cert_arn
   domain_name = aws_s3_bucket.site.bucket_regional_domain_name
   origin_id   = "S3-${var.site_domain}"
 }
@@ -53,7 +53,7 @@ module "cloudfront_www" {
 
   alias       = "www.${var.site_domain}"
   aws_region  = var.aws_region
-  cert_arn    = aws_acm_certificate.cert.arn
+  cert_arn    = var.cert_arn
   domain_name = aws_s3_bucket.www.bucket_regional_domain_name
   origin_id   = "S3-www.${var.site_domain}"
 }
