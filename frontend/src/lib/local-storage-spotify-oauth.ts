@@ -1,7 +1,6 @@
+import { config } from '../config'
 import { TokenResponse } from './models/oauth-token-response'
 
-const clientId = 'd48e33355f30490aa2a952bbf70055ad'
-const redirectURI = 'http://localhost:3000'
 const localStorageStateKey = 'pkceState'
 const localStorageCodeVerifierKey = 'pkceCodeVerifier'
 
@@ -38,8 +37,8 @@ export class LocalStorageSpotifyOAuth {
 
     const params = new URLSearchParams({
       response_type: 'code',
-      client_id: clientId,
-      redirect_uri: redirectURI,
+      client_id: config.spotify.oauth.clientId,
+      redirect_uri: config.spotify.oauth.redirectURI,
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
       state
@@ -64,10 +63,10 @@ export class LocalStorageSpotifyOAuth {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-        client_id: clientId,
+        client_id: config.spotify.oauth.clientId,
         grant_type: 'authorization_code',
         code,
-        redirect_uri: redirectURI,
+        redirect_uri: config.spotify.oauth.redirectURI,
         code_verifier: localStorage.getItem(localStorageCodeVerifierKey) ?? ''
       }).toString()
     })
@@ -82,7 +81,7 @@ export class LocalStorageSpotifyOAuth {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-        client_id: clientId,
+        client_id: config.spotify.oauth.clientId,
         grant_type: 'refresh_token',
         refresh_token: refreshToken
       }).toString()
