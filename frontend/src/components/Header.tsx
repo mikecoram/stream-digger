@@ -14,9 +14,13 @@ class Header extends React.Component<Props> {
       <div className='header'>
         <div className='header__content'>
           <img src={excavatorImage} alt='Spotify Digger logo' className='header__logo' />
-          <span className='header__title'>
+          <div className='header__title'>
             Spotify Digger
-          </span>
+          </div>
+
+          <div className='header__dragPrompt'>
+            Drag from Spotify and drop anywhere on the site
+          </div>
 
           {buttons}
         </div>

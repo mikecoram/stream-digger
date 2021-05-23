@@ -1,9 +1,7 @@
 const getURIsFromDataTransferItem = async (i: DataTransferItem): Promise<string[]> =>
   await new Promise((resolve, reject) => {
     try {
-      i.getAsString((list: string) => {
-        resolve(list.split('\n'))
-      })
+      i.getAsString((list: string) => resolve(list.split('\n')))
     } catch (error) {
       reject(error)
     }
@@ -16,5 +14,5 @@ export async function getPlainTextURIsFromDropEventData (data: DataTransfer): Pr
     }
   }
 
-  throw new Error('no URIs item found')
+  return []
 }

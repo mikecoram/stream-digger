@@ -12,7 +12,6 @@ import { merchants } from '../lib/merchants'
 import { SpotifyDropResolver } from '../lib/spotify-drop-resolver'
 import { SpotifyResolver } from '../lib/spotify-resolver'
 import { Track } from '../lib/models/track'
-import DraggingOverlay from './DraggingOverlay'
 import DragPrompt from './DragPrompt'
 import Footer from './Footer'
 import Header from './Header'
@@ -24,7 +23,6 @@ import { getPlainTextURIsFromDropEventData } from '../lib/drag-event-data'
 interface State {
   albums: Album[]
   importedTracks: Track[]
-  isDragging: boolean
   isLoading: boolean
   isLoggedIn: boolean
 }
@@ -41,7 +39,6 @@ class App extends React.Component<{}, State> {
     this.state = {
       albums: [],
       importedTracks: [],
-      isDragging: false,
       isLoading: false,
       isLoggedIn: this.localSession.exists()
     }
@@ -77,17 +74,16 @@ class App extends React.Component<{}, State> {
     e.preventDefault()
 
     if (e.dataTransfer === null || !this.state.isLoggedIn) {
-      this.setState({ isDragging: false })
       return
     }
 
     this.getDroppedSpotifyURIs(e.dataTransfer)
       .then(URIs => {
         if (URIs.length === 0) {
-          return this.setState({ isDragging: false })
+          return
         }
 
-        this.setState({ isDragging: false, isLoading: true })
+        this.setState({ isLoading: true })
         this.localDrops.append(getDropsFromURIs(URIs))
         this.resolveAlbumsAndTracks()
           .then(() => this.setState({
@@ -100,20 +96,13 @@ class App extends React.Component<{}, State> {
       .catch(err => { throw err })
   }
 
-  handleWindowDragStart (e: DragEvent): void {
+  handleWindowDragStart (e: DragEvent): boolean {
     e.preventDefault()
-
-    if (!this.state.isDragging) {
-      this.setState({ isDragging: true })
-    }
+    return true
   }
 
   handleWindowDragEnd (e: DragEvent): void {
     e.preventDefault()
-
-    if (this.state.isDragging) {
-      this.setState({ isDragging: false })
-    }
   }
 
   handleClearItems (): void {
@@ -208,17 +197,13 @@ class App extends React.Component<{}, State> {
   }
 
   render (): JSX.Element {
-    const { albums, importedTracks, isDragging, isLoading, isLoggedIn } = this.state
+    const { albums, importedTracks, isLoading, isLoggedIn } = this.state
 
     return (
       <>
         {
           isLoading &&
             <LoadingOverlay />
-        }
-        {
-          isLoggedIn && isDragging &&
-            <DraggingOverlay />
         }
 
         <div className='app'>
@@ -242,7 +227,7 @@ class App extends React.Component<{}, State> {
                 <Login />
             }
             {
-              isLoggedIn && !isDragging && !isLoading && albums.length === 0 &&
+              isLoggedIn && !isLoading && albums.length === 0 &&
                 <DragPrompt />
             }
             {
