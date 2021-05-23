@@ -4,11 +4,12 @@ import excavatorImage from './excavator.png'
 
 interface Props {
   buttons: JSX.Element
+  isLoggedIn: boolean
 }
 
 class Header extends React.Component<Props> {
   render (): JSX.Element {
-    const { buttons } = this.props
+    const { buttons, isLoggedIn } = this.props
 
     return (
       <div className='header'>
@@ -18,9 +19,12 @@ class Header extends React.Component<Props> {
             Spotify Digger
           </div>
 
-          <div className='header__dragPrompt'>
-            Drag from Spotify and drop anywhere on the site
-          </div>
+          {
+            isLoggedIn &&
+              <div className='header__dragPrompt'>
+                Drag from Spotify and drop anywhere on the site
+              </div>
+          }
 
           {buttons}
         </div>

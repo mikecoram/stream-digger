@@ -205,18 +205,20 @@ class App extends React.Component<{}, State> {
         }
 
         <div className='app'>
-          <Header buttons={
-            <div className='buttonContainer'>
-              {
-                isLoggedIn && albums.length > 0 &&
-                  <button onClick={() => this.handleClearItems()}>Clear All</button>
-              }
-              {
-                isLoggedIn &&
-                  <button onClick={() => this.handleLogout()}>Logout</button>
-              }
-            </div>
-          }
+          <Header
+            buttons={
+              <div className='buttonContainer'>
+                {
+                  isLoggedIn && albums.length > 0 &&
+                    <button onClick={() => this.handleClearItems()}>Clear All</button>
+                }
+                {
+                  isLoggedIn &&
+                    <button onClick={() => this.handleLogout()}>Logout</button>
+                }
+              </div>
+            }
+            isLoggedIn={isLoggedIn}
           />
 
           <div className='content'>
