@@ -187,11 +187,9 @@ class App extends React.Component<{}, State> {
   }
 
   handleImportedTracksMoreInfo (tracks: Track[]): void {
-    this.setState({ isLoading: true })
     this.resolveAudioFeaturesForTracks(tracks)
       .then(() => this.setState({
-        importedTracks: this.localTracks.get(),
-        isLoading: false
+        importedTracks: this.localTracks.get()
       }))
       .catch(err => { throw err })
   }
