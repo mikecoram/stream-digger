@@ -1,17 +1,15 @@
-add via spotify share link pasted in
 mobile responsive-ness
+add via spotify share link pasted in
+drag and drop doesn't work on safari
 'staging' environment
-CI pipeline
 tests
 refactor to use functional react / hooks
 limit track input and playlist length import (200 songs?)
-pagination / filtering?
 ordering? order by last added as default, allow sort by Artist / Release name?
 'clear bought' button
 add 'remove row' button
-error handling
 
-add gif to readme
-improve readme
-gif demos
+error handling
+access logging, error logging
+
 homepage with intro text and gif
