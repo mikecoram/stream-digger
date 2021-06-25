@@ -6,11 +6,11 @@ variable "aws_region" {
 
 variable "cert_arn" {
   type        = string
-  default     = "arn:aws:acm:us-east-1:704256762269:certificate/632c5395-0f11-4139-87e5-7533f81e3534"
+  default     = "arn:aws:acm:us-east-1:704256762269:certificate/7e8b7357-ec1e-4f92-b705-cf071370c153"
 }
 
 variable "site_domain" {
   type        = string
   description = "The domain name to use for the static site"
-  default     = "spotifydigger.app"
+  default     = "streamdigger.app"
 }

@@ -14,9 +14,9 @@ class Header extends React.Component<Props> {
     return (
       <div className='header'>
         <div className='header__content'>
-          <img src={excavatorImage} alt='Spotify Digger logo' className='header__logo' />
+          <img src={excavatorImage} alt='Stream Digger logo' className='header__logo' />
           <div className='header__title'>
-            Spotify Digger
+            Stream Digger
           </div>
 
           {

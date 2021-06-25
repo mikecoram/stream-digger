@@ -1,4 +1,4 @@
-# [https://spotifydigger.app](https://spotifydigger.app)
+# [https://streamdigger.app](https://streamdigger.app)
 
 For DJs and music lovers.
 

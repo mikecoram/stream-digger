@@ -1,4 +1,4 @@
 #!/bin/bash
-$(cd frontend && npm run build)
+(cd frontend && npm run build)
 BUCKET_NAME=$(cd infrastructure && terraform output -raw website_bucket_name)
 aws s3 cp ./frontend/build s3://$BUCKET_NAME/ --recursive
