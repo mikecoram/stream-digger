@@ -6,7 +6,7 @@ variable "aws_region" {
 
 variable "cert_arn" {
   type        = string
-  default     = "arn:aws:acm:us-east-1:704256762269:certificate/7e8b7357-ec1e-4f92-b705-cf071370c153"
+  default     = "arn:aws:acm:us-east-1:704256762269:certificate/dea1392d-9aed-460f-a28d-e0ff2d81a8b7"
 }
 
 variable "site_domain" {
